@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_explore"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="Explore" />
+
+    <item
+        android:id="@+id/navigation_addNew"
+        android:icon="@drawable/ic_add_circle_outline_black_24dp"
+        android:title="New" />
+
+    <item
+        android:id="@+id/navigation_categories"
+        android:icon="@drawable/ic_format_list_bulleted_black_24dp"
+        android:title="Categories" />
+
+    <item
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="@string/title_notifications" />
+
+</menu>

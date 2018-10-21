@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout3"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewPostFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <EditText
+        android:id="@+id/chooseThread"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="Choose a thread"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/newPostEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="Name of post"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chooseThread" />
+
+
+    <EditText
+        android:id="@+id/postDescEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="Description"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newPostEditText" />
+
+    <Button
+        android:id="@+id/postButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="327dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Post"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/videoAttachment"
+        app:layout_constraintTop_toBottomOf="@+id/newPostEditText" />
+
+    <ImageView
+        android:id="@+id/fileAttachment"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="41dp"
+        android:layout_marginTop="326dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_attachment_black_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newPostEditText" />
+
+    <ImageView
+        android:id="@+id/videoAttachment"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="329dp"
+        android:layout_marginBottom="17dp"
+        android:src="@drawable/ic_videocam_black_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/photoAttachment"
+        app:layout_constraintTop_toBottomOf="@+id/newPostEditText" />
+
+    <ImageView
+        android:id="@+id/photoAttachment"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="326dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_add_a_photo_black_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/fileAttachment"
+        app:layout_constraintTop_toBottomOf="@+id/newPostEditText" />
+
+</android.support.constraint.ConstraintLayout>
