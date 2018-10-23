@@ -1,6 +1,7 @@
 package com.komal.studentforum10;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -39,6 +40,14 @@ public class AddNewActivity extends AppCompatActivity implements NewPostFragment
 
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent myIntent = new Intent(AddNewActivity.this, StudentForum.class);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(myIntent);
+        finish();
     }
 
     @Override
