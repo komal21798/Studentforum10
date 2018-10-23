@@ -7,12 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class StudentForum extends AppCompatActivity {
@@ -67,7 +65,10 @@ public class StudentForum extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studentforum);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavView);
+        BottomNavViewHelper.disableShiftMode(bottomNavigationView);
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavView);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         HomeFragment homeFragment = new HomeFragment();
