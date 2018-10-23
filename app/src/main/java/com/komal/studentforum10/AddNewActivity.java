@@ -7,8 +7,20 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 public class AddNewActivity extends AppCompatActivity implements NewPostFragment.OnFragmentInteractionListener, NewThreadFragment.OnFragmentInteractionListener {
+
+
+    public void onSubmitClick(View view){
+
+        Intent myIntent = new Intent(AddNewActivity.this, ThreadSubmittedActivity.class);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(myIntent);
+        finish();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +51,6 @@ public class AddNewActivity extends AppCompatActivity implements NewPostFragment
             }
 
         });
-
     }
 
     @Override
