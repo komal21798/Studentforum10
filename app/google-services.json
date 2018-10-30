@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "452560320890",
+    "firebase_url": "https://studentforum10-b6d8b.firebaseio.com",
+    "project_id": "studentforum10-b6d8b",
+    "storage_bucket": "studentforum10-b6d8b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452560320890:android:080e638984e3d982",
+        "android_client_info": {
+          "package_name": "com.komal.studentforum10"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "452560320890-sivec3tps3rmqpn8a2opmc8gh8qo2q8g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.komal.studentforum10",
+            "certificate_hash": "1ee7c832a19da14846b846b74f038207b888521c"
+          }
+        },
+        {
+          "client_id": "452560320890-g3hts1fi7p1aius8a15suj1vj2l36bno.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJ8OMfDeUZMbIqKoN4eN_v5CdvE40eKUA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "452560320890-g3hts1fi7p1aius8a15suj1vj2l36bno.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
