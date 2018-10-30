@@ -12,9 +12,10 @@
     tools:context=".LoginActivity">
 
     <!-- Login progress -->
+
     <ProgressBar
         android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
+        style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -69,7 +70,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="onLoginClick"
                 android:text="Login" />
 
             <Button
@@ -77,7 +77,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="onLoginSignUpClick"
                 android:text="Sign Up" />
 
             <Button
@@ -100,5 +99,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".LoginActivity">
-
     </android.support.constraint.ConstraintLayout>-->

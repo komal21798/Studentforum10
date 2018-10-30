@@ -11,13 +11,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class StudentForum extends AppCompatActivity {
 
     private DrawerLayout dl;
     private ActionBarDrawerToggle abdt;
 
+    private FirebaseAuth mAuth;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -65,6 +71,8 @@ public class StudentForum extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studentforum);
 
+        mAuth = FirebaseAuth.getInstance();
+
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavView);
         BottomNavViewHelper.disableShiftMode(bottomNavigationView);
 
@@ -101,7 +109,7 @@ public class StudentForum extends AppCompatActivity {
                 }
 
                 else if(id == R.id.logout){
-                    Toast.makeText(StudentForum.this, "Logout", Toast.LENGTH_SHORT).show();
+                    logout();
                 }
 
                 return true;
@@ -112,5 +120,20 @@ public class StudentForum extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+    public void goToLogin(){
+
+        Intent loginIntent = new Intent(StudentForum.this,LoginActivity.class);
+        startActivity(loginIntent);
+        finish();
+
+    }
+
+    public void logout(){
+
+        mAuth.signOut();
+        goToLogin();
+
     }
 }
