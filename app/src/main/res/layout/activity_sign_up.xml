@@ -37,7 +37,7 @@
                 android:layout_height="match_parent">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/fname"
+                    android:id="@+id/signup_fname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="First Name"
@@ -50,7 +50,7 @@
                 android:layout_height="match_parent">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/lname"
+                    android:id="@+id/signup_lname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Last Name"
@@ -59,6 +59,20 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/email_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/signup_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Email"
+                    android:inputType="text" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <!--<android.support.design.widget.TextInputLayout
                 android:id="@+id/uname_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -70,7 +84,7 @@
                     android:hint="Username"
                     android:inputType="text" />
 
-            </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>-->
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/password_layout"
@@ -78,7 +92,7 @@
                 android:layout_height="match_parent">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/password"
+                    android:id="@+id/signup_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Password"
@@ -91,7 +105,7 @@
                 android:layout_height="match_parent">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/password2"
+                    android:id="@+id/signup_confirm_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Confirm Password"
@@ -99,12 +113,11 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/signUp"
+                android:id="@+id/signup_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="onSubmitClick"
-                android:text="Submit" />
+                android:text="Sign Up" />
 
         </LinearLayout>
     </ScrollView>

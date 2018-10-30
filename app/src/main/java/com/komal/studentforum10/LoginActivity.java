@@ -7,7 +7,7 @@ import android.view.View;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public void onSignUpClick(View view){
+    public void onLoginSignUpClick(View view){
 
         Intent myIntent = new Intent(LoginActivity.this, SignUpActivity.class);
         LoginActivity.this.startActivity(myIntent);
