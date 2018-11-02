@@ -98,10 +98,14 @@ public class StudentForum extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+                Intent myIntent;
+
                 int id = item.getItemId();
 
                 if(id == R.id.my_profile){
-                    Toast.makeText(StudentForum.this, "My profile", Toast.LENGTH_SHORT).show();
+
+                    setupAccount();
+
                 }
 
                 else if(id == R.id.settings){
@@ -109,7 +113,9 @@ public class StudentForum extends AppCompatActivity {
                 }
 
                 else if(id == R.id.logout){
+
                     logout();
+
                 }
 
                 return true;
@@ -134,6 +140,13 @@ public class StudentForum extends AppCompatActivity {
 
         mAuth.signOut();
         goToLogin();
+
+    }
+
+    public void setupAccount() {
+
+        Intent myIntent = new Intent(StudentForum.this,AccountSetupActivity.class);
+        startActivity(myIntent);
 
     }
 }
