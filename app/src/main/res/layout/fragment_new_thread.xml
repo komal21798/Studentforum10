@@ -11,7 +11,7 @@
 
     <EditText
         android:id="@+id/newThreadEditText"
-        android:layout_width="357dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
@@ -25,7 +25,7 @@
 
     <EditText
         android:id="@+id/threadDescEditText"
-        android:layout_width="355dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
