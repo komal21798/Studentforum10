@@ -69,8 +69,13 @@
                 android:id="@+id/login_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
+                android:background="@drawable/rounded_button"
                 android:backgroundTint="@color/colorAccent"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
                 android:text="Login"
                 android:textColor="#ffffff" />
 
@@ -78,15 +83,29 @@
                 android:id="@+id/login_signup_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
-                android:text="Sign Up" />
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/colorAccent"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:text="Sign Up"
+                android:textColor="#ffffff" />
 
             <Button
                 android:id="@+id/forgot_password_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/colorAccent"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
                 android:text="Forgot Password"
+                android:textColor="#ffffff"
                 android:textSize="14sp" />
 
         </LinearLayout>
