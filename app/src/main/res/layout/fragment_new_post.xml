@@ -66,7 +66,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/videoAttachment"
-        app:layout_constraintTop_toBottomOf="@+id/newPostName" />
+        app:layout_constraintTop_toBottomOf="@+id/newPostName"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorAccent"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:textColor="#ffffff"
+        android:textSize="14sp"/>
 
     <ImageView
         android:id="@+id/fileAttachment"
