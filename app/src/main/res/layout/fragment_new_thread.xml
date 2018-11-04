@@ -50,6 +50,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newThreadEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/newThreadEditText"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorAccent"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:textColor="#ffffff"
+        android:textSize="14sp"/>
 
 </android.support.constraint.ConstraintLayout>
