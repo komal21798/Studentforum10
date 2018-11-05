@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -144,14 +145,67 @@ public class AccountSetupActivity extends AppCompatActivity {
 
                     final StorageReference image_path = storageReference.child("profile_images").child(user_id + ".jpg");
 
-                    image_path.putFile(mainImageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    image_path.putFile(mainImageURI).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+                            // Continue with the task to get the download URL
+                            return image_path.getDownloadUrl();
+
+                        }
+
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                Uri downloadUri = task.getResult();
+                                Map<String, String> userMap = new HashMap<>();
+                                userMap.put("username", user_name);
+                                userMap.put("profile_image", downloadUri.toString());
+
+                                firebaseFirestore.collection("Users").document(user_id).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                        if(task.isSuccessful()){
+
+                                            Toast.makeText(AccountSetupActivity.this, "Done!", Toast.LENGTH_SHORT).show();
+                                            Intent myIntent = new Intent(AccountSetupActivity.this, StudentForum.class);
+                                            startActivity(myIntent);
+                                            finish();
+
+                                        } else {
+
+                                            String error = task.getException().getMessage();
+                                            Toast.makeText(AccountSetupActivity.this, "Firebase firestore: " + error, Toast.LENGTH_SHORT).show();
+
+                                        }
+                                        setup_progress.setVisibility(View.INVISIBLE);
+                                    }
+
+                                });
+
+                            } else {
+
+                                String error = task.getException().getMessage();
+                                Toast.makeText(AccountSetupActivity.this, "File upload error: " + error, Toast.LENGTH_SHORT).show();
+                                setup_progress.setVisibility(View.INVISIBLE);
+
+                            }
+                        }
+                    });
+
+
+                    /*image_path.putFile(mainImageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
                             if(task.isSuccessful()) {
 
                                 //Task<Uri> download_url = image_path.child("profile_images/" + user_id + ".jpg").getDownloadUrl();
-                                Uri download_url = task.getResult().getUploadSessionUri();
+                                //Task<Uri> download_url = task.getResult().getMetadata().getReference().getDownloadUrl();
                                 //Task<Uri> uri = image_path.getDownloadUrl();
                                 Map<String, String> userMap = new HashMap<>();
                                 userMap.put("username", user_name);
@@ -160,19 +214,19 @@ public class AccountSetupActivity extends AppCompatActivity {
                                 firebaseFirestore.collection("Users").document(user_id).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                   
+
                                         if(task.isSuccessful()){
 
                                             Toast.makeText(AccountSetupActivity.this, "Done!", Toast.LENGTH_SHORT).show();
                                             Intent myIntent = new Intent(AccountSetupActivity.this, StudentForum.class);
                                             startActivity(myIntent);
                                             finish();
-                                            
+
                                         } else {
-                                            
+
                                             String error = task.getException().getMessage();
                                             Toast.makeText(AccountSetupActivity.this, "Firebase firestore: " + error, Toast.LENGTH_SHORT).show();
-                                            
+
                                         }
                                         setup_progress.setVisibility(View.INVISIBLE);
                                     }
@@ -186,7 +240,7 @@ public class AccountSetupActivity extends AppCompatActivity {
 
                             }
                         }
-                    });
+                    });*/
                 }
             }
         });

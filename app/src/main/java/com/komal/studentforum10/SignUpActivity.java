@@ -60,6 +60,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                                 if(task.isSuccessful()){
 
+                                    sendEmailVerification();
                                     Intent myIntent = new Intent(SignUpActivity.this,StudentForum.class);
                                     startActivity(myIntent);
                                     finish();
@@ -111,6 +112,30 @@ public class SignUpActivity extends AppCompatActivity {
             sendToMain();
             finish();
 
+        }
+    }
+
+    private void sendEmailVerification() {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null){
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+
+                    if(task.isSuccessful()){
+
+                        Toast.makeText(SignUpActivity.this,"Check your Email for Verification",Toast.LENGTH_LONG).show();
+                        FirebaseAuth.getInstance().signOut();
+
+                    } else {
+
+                        String error = task.getException().getMessage();
+                        Toast.makeText(SignUpActivity.this, "Email verification error:" + error, Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            });
         }
     }
 }
