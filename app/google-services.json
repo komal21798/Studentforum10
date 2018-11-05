@@ -23,14 +23,6 @@
           }
         },
         {
-          "client_id": "452560320890-17a07bem458khpnminuqaki1ggdrv038.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.komal.studentforum10",
-            "certificate_hash": "aff306e9d274a9faa17977a16be172ef05ff46bc"
-          }
-        },
-        {
           "client_id": "452560320890-g3hts1fi7p1aius8a15suj1vj2l36bno.apps.googleusercontent.com",
           "client_type": 3
         }
