@@ -33,7 +33,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         setTitle("Login");
 
-
         FirebaseApp.initializeApp(this);
 
         login_email = (EditText) findViewById(R.id.login_email);
@@ -68,7 +67,8 @@ public class LoginActivity extends AppCompatActivity {
 
                             } else {
 
-                                Toast.makeText(LoginActivity.this, "Error!", Toast.LENGTH_LONG).show();
+                                String error = task.getException().getMessage();
+                                Toast.makeText(LoginActivity.this, "Error" + error, Toast.LENGTH_LONG).show();
 
                             }
 
