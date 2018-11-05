@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if(!TextUtils.isEmpty(loginEmail) && !TextUtils.isEmpty(loginPassword)) {
 
-                    //login_progress.setVisibility(View.VISIBLE);
+                    login_progress.setVisibility(View.VISIBLE);
 
                     mAuth.signInWithEmailAndPassword(loginEmail, loginPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             }
 
-                            //login_progress.setVisibility(View.INVISIBLE);
+                            login_progress.setVisibility(View.INVISIBLE);
 
                         }
                     });
