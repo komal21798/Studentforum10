@@ -60,6 +60,9 @@ public class SignUpActivity extends AppCompatActivity {
 
                                 if(task.isSuccessful()){
 
+                                    sendEmailVerification();
+                                    
+
                                     Intent myIntent = new Intent(SignUpActivity.this,StudentForum.class);
                                     startActivity(myIntent);
                                     finish();
@@ -93,6 +96,22 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+   /* private void sendEmailVerification() {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null){
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(SignUpActivity.this,"Check your email for verification",Toast.LENGTH_LONG).show();
+                    FirebaseAuth.getInstance().signOut();
+                }
+                }
+            });
+        }
+    }*/
+
     public void sendToMain(){
 
         Intent myIntent = new Intent(SignUpActivity.this,MainActivity.class);
@@ -112,5 +131,21 @@ public class SignUpActivity extends AppCompatActivity {
             finish();
 
         }
+    } private void sendEmailVerification() {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null){
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        Toast.makeText(SignUpActivity.this,"Check your Email for Verification",Toast.LENGTH_LONG).show();
+                        FirebaseAuth.getInstance().signOut();
+                    }
+                }
+            });
+        }
     }
+
+
 }
