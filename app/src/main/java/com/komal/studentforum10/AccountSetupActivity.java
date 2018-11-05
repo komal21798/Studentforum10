@@ -59,10 +59,10 @@ public class AccountSetupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_setup);
 
-        setup_profile_pic = (CircleImageView) findViewById(R.id.setup_profile_pic);
-        setup_name = (EditText) findViewById(R.id.setup_username);
-        setup_save_details_btn = (Button) findViewById(R.id.setup_save_details_btn);
-        setup_progress = (ProgressBar) findViewById(R.id.setup_progress);
+        setup_profile_pic = findViewById(R.id.setup_profile_pic);
+        setup_name = findViewById(R.id.setup_username);
+        setup_save_details_btn = findViewById(R.id.setup_save_details_btn);
+        setup_progress = findViewById(R.id.setup_progress);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();

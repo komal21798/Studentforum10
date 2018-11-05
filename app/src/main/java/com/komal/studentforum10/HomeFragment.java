@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -34,6 +35,8 @@ public class HomeFragment extends Fragment {
 
     private FirebaseFirestore firebaseFirestore;
 
+    private FirebaseAuth firebaseAuth;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -46,6 +49,7 @@ public class HomeFragment extends Fragment {
         View v;
         v = inflater.inflate(R.layout.fragment_home, container, false);
 
+        firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         homeFeedView = (RecyclerView) v.findViewById(R.id.homeFeedView);
@@ -55,25 +59,28 @@ public class HomeFragment extends Fragment {
         homeFeedView.setLayoutManager(new LinearLayoutManager(getActivity()));
         homeFeedView.setAdapter(homeFeedRecyclerAdapter);
 
-        firebaseFirestore.collection("Posts").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+        if (firebaseAuth.getCurrentUser() != null) {
 
-                for(DocumentChange doc: queryDocumentSnapshots.getDocumentChanges()) {
+            firebaseFirestore.collection("Posts").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                    if(doc.getType() == DocumentChange.Type.ADDED) {
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
-                        HomeFeed homeFeed = doc.getDocument().toObject(HomeFeed.class);
-                        homeFeedList.add(homeFeed);
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                        homeFeedRecyclerAdapter.notifyDataSetChanged();
+                            HomeFeed homeFeed = doc.getDocument().toObject(HomeFeed.class);
+                            homeFeedList.add(homeFeed);
+
+                            homeFeedRecyclerAdapter.notifyDataSetChanged();
+
+                        }
 
                     }
 
                 }
-
-            }
-        });
+            });
+        }
 
         return v;
     }
