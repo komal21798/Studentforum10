@@ -34,6 +34,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        FirebaseUser user = mAuth.getInstance().getCurrentUser();
+
         signup_email = (EditText) findViewById(R.id.signup_email);
         signup_password = (EditText) findViewById(R.id.signup_password);
         signup_confirm_password = (EditText) findViewById(R.id.signup_confirm_password);
@@ -119,7 +121,9 @@ public class SignUpActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null){
+
             user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
 
@@ -138,6 +142,4 @@ public class SignUpActivity extends AppCompatActivity {
             });
         }
     }
-
-
 }

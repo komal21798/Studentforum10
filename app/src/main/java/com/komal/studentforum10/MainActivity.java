@@ -21,11 +21,6 @@ public class MainActivity extends AppCompatActivity {
 
     private String current_user_id;
 
-    public void onBttnClick(View view){
-
-
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                             finish();
 
                         }
+
                         finish();
 
                     } else {
@@ -72,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Main activity error:" + error, Toast.LENGTH_SHORT).show();
 
                     }
+
+                    finish();
 
                 }
 
