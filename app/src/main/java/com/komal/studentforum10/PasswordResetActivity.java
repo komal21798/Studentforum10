@@ -13,11 +13,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class PasswordActivity extends AppCompatActivity {
-
+public class PasswordResetActivity extends AppCompatActivity {
 
     private EditText ResetEmailInput;
     private Button ResetPasswordButton;
+
     private FirebaseAuth firebaseAuth;
 
     @Override
@@ -32,24 +32,30 @@ public class PasswordActivity extends AppCompatActivity {
         ResetPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String useremail= ResetEmailInput.getText().toString().trim();
 
                 if (useremail.equals("")){
-                    Toast.makeText(PasswordActivity.this,"Please enter your registered email", Toast.LENGTH_SHORT).show();
 
-
+                    Toast.makeText(PasswordResetActivity.this,"Please enter your registered email", Toast.LENGTH_SHORT).show();
 
                 } else{
+
                     firebaseAuth.sendPasswordResetEmail(useremail).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+
                             if (task.isSuccessful()) {
-                                Toast.makeText(PasswordActivity.this, "Password Reset Email Link Sent", Toast.LENGTH_SHORT).show();
+
+                                Toast.makeText(PasswordResetActivity.this, "Password Reset Email Link Sent", Toast.LENGTH_SHORT).show();
                                 finish();
-                                startActivity(new Intent(PasswordActivity.this, MainActivity.class));
+                                startActivity(new Intent(PasswordResetActivity.this, MainActivity.class));
+
                             }
                             else {
-                                Toast.makeText(PasswordActivity.this, "Error in sending password reset link", Toast.LENGTH_SHORT).show();
+
+                                String error =task.getException().getMessage();
+                                Toast.makeText(PasswordResetActivity.this, "Passord reset error:" + error, Toast.LENGTH_SHORT).show();
 
                             }
 
