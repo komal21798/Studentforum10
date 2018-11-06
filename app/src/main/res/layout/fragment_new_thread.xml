@@ -10,7 +10,7 @@
     <!-- TODO: Update blank fragment layout -->
 
     <EditText
-        android:id="@+id/newThreadEditText"
+        android:id="@+id/newThreadName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -19,12 +19,13 @@
         android:ems="10"
         android:hint="Name of thread"
         android:inputType="textPersonName"
+        android:maxLength="40"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/threadDescEditText"
+        android:id="@+id/newThreadDesc"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -33,29 +34,42 @@
         android:ems="10"
         android:hint="Description"
         android:inputType="textMultiLine"
+        android:maxLength="50"
+        android:maxLines="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newThreadEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/newThreadName" />
 
     <Button
-        android:id="@+id/submitButton"
+        android:id="@+id/newThreadSubmitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="280dp"
         android:layout_marginTop="385dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorAccent"
         android:onClick="onSubmitClick"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
         android:text="Submit"
+        android:textColor="#ffffff"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newThreadEditText"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/colorAccent"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:textColor="#ffffff"
-        android:textSize="14sp"/>
+        app:layout_constraintTop_toBottomOf="@+id/newThreadName" />
+
+    <ProgressBar
+        android:id="@+id/newThreadProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

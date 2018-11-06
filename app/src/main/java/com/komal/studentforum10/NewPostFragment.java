@@ -30,15 +30,6 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NewPostFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NewPostFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class NewPostFragment extends Fragment {
 
     private EditText newPostThread;
@@ -70,15 +61,6 @@ public class NewPostFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NewPostFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static NewPostFragment newInstance(String param1, String param2) {
 
         NewPostFragment fragment = new NewPostFragment();
@@ -122,22 +104,24 @@ public class NewPostFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                String post_thread = newPostThread.getText().toString();
                 String post_name = newPostName.getText().toString();
                 String post_desc = newPostDesc.getText().toString();
 
-                if(!TextUtils.isEmpty(post_desc) && !TextUtils.isEmpty(post_name)) {
+                if(!TextUtils.isEmpty(post_desc) && !TextUtils.isEmpty(post_name) /*&& !TextUtils.isEmpty(post_thread)*/) {
 
                     newPostProgress.setVisibility(View.VISIBLE);
 
                     Map<String, Object> postMap = new HashMap<>();
                     postMap.put("user_id", user_id);
+                    postMap.put("post_thread", post_thread);
                     postMap.put("post_name", post_name);
                     postMap.put("post_desc", post_desc);
                     postMap.put("timestamp", FieldValue.serverTimestamp());
 
-                    firebaseFirestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    firebaseFirestore/*.collection("Threads").document(post_thread)*/.collection("Posts").document(post_name).set(postMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                        public void onComplete(@NonNull Task<Void> task) {
 
                             if(task.isSuccessful()){
 
@@ -198,16 +182,6 @@ public class NewPostFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
