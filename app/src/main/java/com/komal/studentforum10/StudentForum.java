@@ -25,6 +25,8 @@ public class StudentForum extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+    private FirebaseUser firebaseUser;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -140,6 +142,7 @@ public class StudentForum extends AppCompatActivity {
 
         mAuth.signOut();
         goToLogin();
+        finish();
 
     }
 
