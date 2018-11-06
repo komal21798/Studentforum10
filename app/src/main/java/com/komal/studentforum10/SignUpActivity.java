@@ -61,7 +61,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 if(task.isSuccessful()){
 
                                     sendEmailVerification();
-                                    Intent myIntent = new Intent(SignUpActivity.this,StudentForum.class);
+                                    Intent myIntent = new Intent(SignUpActivity.this,LoginActivity.class);
                                     startActivity(myIntent);
                                     finish();
 
@@ -113,7 +113,9 @@ public class SignUpActivity extends AppCompatActivity {
             finish();
 
         }
-    } private void sendEmailVerification() {
+    }
+
+    private void sendEmailVerification() {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null){

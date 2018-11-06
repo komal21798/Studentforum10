@@ -19,15 +19,15 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecyclerAdapter.ViewHolder> {
+public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeedRecyclerAdapter.ViewHolder> {
 
-    public List<HomeFeed> homeFeedList;
+    public List<ExploreFeed> exploreFeedList;
     private FirebaseFirestore firebaseFirestore;
     private Context context;
 
-    public HomeFeedRecyclerAdapter(List<HomeFeed> homeFeedList) {
+    public ExploreFeedRecyclerAdapter(List<ExploreFeed> exploreFeedList) {
 
-        this.homeFeedList = homeFeedList;
+        this.exploreFeedList = exploreFeedList;
 
     }
 
@@ -45,10 +45,10 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
-        String postNameData = homeFeedList.get(position).getPost_name();
+        String postNameData = exploreFeedList.get(position).getPost_name();
         holder.setPostName(postNameData);
 
-        String user_id = homeFeedList.get(position).getUser_id();
+        String user_id = exploreFeedList.get(position).getUser_id();
 
         firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -56,7 +56,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
                 String postUsername;
                 String postUserimage;
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
 
                     postUsername = task.getResult().getString("username");
                     postUserimage = task.getResult().getString("profile_image");
@@ -73,10 +73,10 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
     @Override
     public int getItemCount() {
-        return homeFeedList.size();
+        return exploreFeedList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private View mView;
         private TextView postName;
@@ -104,7 +104,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
         }
 
-        public void setUserimage(String postUserimageText){
+        public void setUserimage(String postUserimageText) {
 
             postUserimage = mView.findViewById(R.id.postUserImage);
 
@@ -116,9 +116,10 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
         public void setPostDate(String postDateText) {
 
-            postDate =mView.findViewById(R.id.postDate);
+            postDate = mView.findViewById(R.id.postDate);
             postDate.setText(postDateText);
 
         }
     }
 }
+
