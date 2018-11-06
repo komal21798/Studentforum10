@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button login_btn;
     private Button login_signup_btn;
     private ProgressBar login_progress;
+    private Button forgotPasswordBtn;
+
 
     private FirebaseAuth mAuth;
 
@@ -40,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         login_btn = (Button) findViewById(R.id.login_btn);
         login_signup_btn = (Button) findViewById(R.id.login_signup_btn);
         login_progress = (ProgressBar) findViewById(R.id.login_progress);
+        forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -91,6 +95,18 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+
+        forgotPasswordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, PasswordActivity.class));
+            }
+        });
+
+
+
+
+
 
     }
 }
