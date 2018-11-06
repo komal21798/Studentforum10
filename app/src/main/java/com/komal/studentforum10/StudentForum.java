@@ -109,7 +109,7 @@ public class StudentForum extends AppCompatActivity {
                 }
 
                 else if(id == R.id.settings){
-                    Toast.makeText(StudentForum.this, "Settings", Toast.LENGTH_SHORT).show();
+                   goToSettings();
                 }
 
                 else if(id == R.id.logout){
@@ -148,5 +148,10 @@ public class StudentForum extends AppCompatActivity {
         Intent myIntent = new Intent(StudentForum.this,AccountSetupActivity.class);
         startActivity(myIntent);
 
+    }
+
+    public void goToSettings() {
+        Intent SettingsIntent =  new Intent(StudentForum.this,SettingsActivity.class);
+        startActivity(SettingsIntent);
     }
 }
