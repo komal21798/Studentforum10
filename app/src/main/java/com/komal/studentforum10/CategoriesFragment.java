@@ -60,7 +60,7 @@ public class CategoriesFragment extends Fragment {
 
         if (firebaseAuth.getCurrentUser() != null) {
 
-            firebaseFirestore.collection("Threads").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            firebaseFirestore.collection("Threads").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 

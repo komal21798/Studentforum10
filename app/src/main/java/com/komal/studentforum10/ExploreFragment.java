@@ -61,7 +61,7 @@ public class ExploreFragment extends Fragment {
 
         if (firebaseAuth.getCurrentUser() != null) {
 
-            firebaseFirestore.collection("Posts").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            firebaseFirestore.collection("Posts").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
