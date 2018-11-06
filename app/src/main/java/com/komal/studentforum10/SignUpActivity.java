@@ -48,69 +48,59 @@ public class SignUpActivity extends AppCompatActivity {
                 String password = signup_password.getText().toString();
                 String confirm_password = signup_confirm_password.getText().toString();
 
-                if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(confirm_password)){
+                if(!email.endsWith("@nuv.ac.in")) {
 
-                    signup_progress.setVisibility(View.VISIBLE);
-
-                    if(password.equals(confirm_password)){
-
-                        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                if(task.isSuccessful()){
-
-                                    sendEmailVerification();
-                                    
-
-                                    Intent myIntent = new Intent(SignUpActivity.this,StudentForum.class);
-                                    startActivity(myIntent);
-                                    finish();
-
-                                } else {
-
-                                    signup_progress.setVisibility(View.INVISIBLE);
-                                    String error = task.getException().getMessage();
-                                    Toast.makeText(SignUpActivity.this, error, Toast.LENGTH_SHORT).show();
-
-                                }
-
-                            }
-                        });
-
-                    } else {
-
-                        Toast.makeText(SignUpActivity.this, "Confirm password and password don't match!", Toast.LENGTH_SHORT).show();
-                        signup_progress.setVisibility(View.INVISIBLE);
-
-                    }
+                    Toast.makeText(SignUpActivity.this, "Users can only register with nuv.ac.in emails", Toast.LENGTH_SHORT).show();
 
                 } else {
 
-                    Toast.makeText(SignUpActivity.this, "Please enter all the details!", Toast.LENGTH_SHORT).show();
-                    signup_progress.setVisibility(View.INVISIBLE);
+                    if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(confirm_password)){
+
+                        signup_progress.setVisibility(View.VISIBLE);
+
+                        if(password.equals(confirm_password)){
+
+                            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                    if(task.isSuccessful()){
+
+                                        sendEmailVerification();
+                                        Intent myIntent = new Intent(SignUpActivity.this,LoginActivity.class);
+                                        startActivity(myIntent);
+                                        finish();
+
+                                    } else {
+
+                                        signup_progress.setVisibility(View.INVISIBLE);
+                                        String error = task.getException().getMessage();
+                                        Toast.makeText(SignUpActivity.this, error, Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                }
+                            });
+
+                        } else {
+
+                            Toast.makeText(SignUpActivity.this, "Confirm password and password don't match!", Toast.LENGTH_SHORT).show();
+                            signup_progress.setVisibility(View.INVISIBLE);
+
+                        }
+
+                    } else {
+
+                        Toast.makeText(SignUpActivity.this, "Please enter all the details!", Toast.LENGTH_SHORT).show();
+                        signup_progress.setVisibility(View.INVISIBLE);
+
+                    }
 
                 }
 
             }
         });
     }
-
-   /* private void sendEmailVerification() {
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user!=null){
-            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(SignUpActivity.this,"Check your email for verification",Toast.LENGTH_LONG).show();
-                    FirebaseAuth.getInstance().signOut();
-                }
-                }
-            });
-        }
-    }*/
 
     public void sendToMain(){
 
@@ -131,7 +121,9 @@ public class SignUpActivity extends AppCompatActivity {
             finish();
 
         }
-    } private void sendEmailVerification() {
+    }
+
+    private void sendEmailVerification() {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null){

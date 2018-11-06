@@ -1,26 +1,41 @@
 package com.komal.studentforum10;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NewThreadFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NewThreadFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.HashMap;
+import java.util.Map;
+
 public class NewThreadFragment extends Fragment {
 
+    private EditText newThreadName;
+    private EditText newThreadDesc;
+    private Button newThreadSubmitBtn;
+    private ProgressBar newThreadProgress;
+
+    private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
+
+    private String user_id;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,15 +52,6 @@ public class NewThreadFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NewThreadFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static NewThreadFragment newInstance(String param1, String param2) {
         NewThreadFragment fragment = new NewThreadFragment();
         Bundle args = new Bundle();
@@ -67,8 +73,66 @@ public class NewThreadFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_thread, container, false);
+        View v;
+        v = inflater.inflate(R.layout.fragment_new_thread, container, false);
+
+        newThreadName = v.findViewById(R.id.newThreadName);
+        newThreadDesc = v.findViewById(R.id.newThreadDesc);
+        newThreadSubmitBtn = v.findViewById(R.id.newThreadSubmitBtn);
+        newThreadProgress = v.findViewById(R.id.newThreadProgress);
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        user_id = firebaseAuth.getCurrentUser().getUid();
+
+        newThreadSubmitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String threadName = newThreadName.getText().toString();
+                String threadDesc = newThreadDesc.getText().toString();
+
+                if(!TextUtils.isEmpty(threadName) && !TextUtils.isEmpty(threadDesc)) {
+
+                    newThreadProgress.setVisibility(View.VISIBLE);
+
+                    Map<String, Object> threadMap = new HashMap<>();
+                    threadMap.put("user_id", user_id);
+                    threadMap.put("thread_name", threadName);
+                    threadMap.put("thread_desc", threadDesc);
+
+                    firebaseFirestore.collection("Threads").document(threadName).set(threadMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            if(task.isSuccessful()){
+
+                                Intent myIntent = new Intent(getActivity(), ThreadSubmittedActivity.class);
+                                startActivity(myIntent);
+
+                            } else{
+
+                                String error = task.getException().getMessage();
+                                Toast.makeText(getActivity(), "Thread posting error:" + error, Toast.LENGTH_SHORT).show();
+
+                            }
+
+                        }
+                    });
+
+                } else {
+
+                    Toast.makeText(getActivity(), "Enter all the details.", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+        });
+
+
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -95,16 +159,6 @@ public class NewThreadFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
