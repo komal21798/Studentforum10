@@ -1,19 +1,33 @@
 package com.komal.studentforum10;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
+
 public class HomeFeed {
 
     public String post_name;
     public String post_desc;
     public String user_id;
+    public Date timestamp;
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public HomeFeed(){
 
     }
 
-    public HomeFeed(String post_name, String post_desc, String user_id) {
+    public HomeFeed(String post_name, String post_desc, String user_id, Date timestamp) {
         this.post_name = post_name;
         this.post_desc = post_desc;
         this.user_id = user_id;
+        this.timestamp = timestamp;
     }
 
     public String getPost_name() {

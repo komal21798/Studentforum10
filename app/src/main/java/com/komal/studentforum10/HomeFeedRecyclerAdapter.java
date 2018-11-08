@@ -3,10 +3,12 @@ package com.komal.studentforum10;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -15,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -45,8 +48,8 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
-        String postNameData = homeFeedList.get(position).getPost_name();
-        holder.setPostName(postNameData);
+        String postName = homeFeedList.get(position).getPost_name();
+        holder.setPostName(postName);
 
         String user_id = homeFeedList.get(position).getUser_id();
 
@@ -68,6 +71,18 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
             }
         });
+
+        try {
+
+            long millisecond = homeFeedList.get(position).getTimestamp().getTime();
+            String dateString = DateFormat.format("dd/MM/yyyy", new Date(millisecond)).toString();
+            holder.setPostDate(dateString);
+
+        } catch (Exception e) {
+
+            Toast.makeText(context, "Exception : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+        }
 
     }
 
@@ -116,9 +131,10 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
         public void setPostDate(String postDateText) {
 
-            postDate =mView.findViewById(R.id.postDate);
+            postDate = mView.findViewById(R.id.postDate);
             postDate.setText(postDateText);
 
         }
+
     }
 }
