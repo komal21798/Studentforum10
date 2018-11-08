@@ -33,7 +33,8 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".PasswordResetActivity"></activity>
+        <activity android:name=".PasswordResetActivity" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>
