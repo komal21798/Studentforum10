@@ -64,8 +64,6 @@ public class HomeFragment extends Fragment {
         homeFeedView.setAdapter(homeFeedRecyclerAdapter);
 
         if (firebaseAuth.getCurrentUser() != null) {
-
-
             homeFeedView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -85,6 +83,7 @@ public class HomeFragment extends Fragment {
                     .limit(15);
 
             firstQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+              
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
