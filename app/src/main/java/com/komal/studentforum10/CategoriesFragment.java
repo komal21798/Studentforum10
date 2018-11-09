@@ -1,8 +1,10 @@
 package com.komal.studentforum10;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,7 +31,6 @@ public class CategoriesFragment extends Fragment {
 
     private RecyclerView categoriesFeedView;
     private List<CategoriesFeed> categoriesFeedList;
-
     private CategoriesFeedRecyclerAdapter categoriesFeedRecyclerAdapter;
 
     private FirebaseFirestore firebaseFirestore;
@@ -52,6 +53,7 @@ public class CategoriesFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         categoriesFeedView = (RecyclerView) v.findViewById(R.id.categoriesFeedView);
+
         categoriesFeedList = new ArrayList<>();
 
         categoriesFeedRecyclerAdapter = new CategoriesFeedRecyclerAdapter(categoriesFeedList);

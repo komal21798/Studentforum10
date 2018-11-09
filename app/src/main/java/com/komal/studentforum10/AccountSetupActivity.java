@@ -142,49 +142,65 @@ public class AccountSetupActivity extends AppCompatActivity {
                 final String user_name = setup_name.getText().toString();
                 setup_progress.setVisibility(View.VISIBLE);
 
-                if (isChanged) {
+                if(!TextUtils.isEmpty(user_name)) {
 
-                    if (!TextUtils.isEmpty(user_name)) {
+                    if (isChanged) {
 
-                        final String user_id = firebaseAuth.getCurrentUser().getUid();
+                        if (!TextUtils.isEmpty(user_name)) {
 
-                        final StorageReference image_path = storageReference.child("profile_images").child(user_id + ".jpg");
+                            final String user_id = firebaseAuth.getCurrentUser().getUid();
 
-                        image_path.putFile(mainImageURI).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                            @Override
-                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            final StorageReference image_path = storageReference.child("profile_images").child(user_id + ".jpg");
 
-                                if (!task.isSuccessful()) {
-                                    throw task.getException();
-                                }
+                            image_path.putFile(mainImageURI).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                @Override
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
 
-                                return image_path.getDownloadUrl();
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
+                                    }
 
-                            }
-
-                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                if (task.isSuccessful()) {
-
-                                    storeFirestore(task, user_name);
-
-                                } else {
-
-                                    String error = task.getException().getMessage();
-                                    Toast.makeText(AccountSetupActivity.this, "File upload error: " + error, Toast.LENGTH_SHORT).show();
-                                    setup_progress.setVisibility(View.INVISIBLE);
+                                    return image_path.getDownloadUrl();
 
                                 }
-                            }
-                        });
+
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    if (task.isSuccessful() && !TextUtils.isEmpty(user_name)) {
+
+                                        storeFirestore(task, user_name);
+
+                                    } else {
+
+                                        String error = task.getException().getMessage();
+                                        Toast.makeText(AccountSetupActivity.this, "File upload error: " + error, Toast.LENGTH_SHORT).show();
+                                        setup_progress.setVisibility(View.INVISIBLE);
+
+                                    }
+                                }
+                            });
+
+                        } else {
+
+                            Toast.makeText(AccountSetupActivity.this, "Enter username.", Toast.LENGTH_SHORT).show();
+                            setup_progress.setVisibility(View.INVISIBLE);
+
+                        }
+
+                    } else {
+
+                        storeFirestore(null,user_name);
 
                     }
+
                 } else {
 
-                    storeFirestore(null,user_name);
+                    Toast.makeText(AccountSetupActivity.this, "Enter username.", Toast.LENGTH_SHORT).show();
+                    setup_progress.setVisibility(View.INVISIBLE);
 
                 }
+
             }
         });
     }

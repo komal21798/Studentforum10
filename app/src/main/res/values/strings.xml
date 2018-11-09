@@ -25,4 +25,8 @@
     <!-- String related to navigation view -->
     <string name="Open">NavBar</string>
     <string name="Close">NavBar</string>
+
+    <string name="title_activity_thread">ThreadActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

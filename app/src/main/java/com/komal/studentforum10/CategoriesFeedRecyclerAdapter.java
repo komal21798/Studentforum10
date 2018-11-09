@@ -47,7 +47,7 @@ public class CategoriesFeedRecyclerAdapter extends RecyclerView.Adapter<Categori
         return categoriesFeedList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder      {
 
         private View mView;
         private TextView threadName;
@@ -64,5 +64,6 @@ public class CategoriesFeedRecyclerAdapter extends RecyclerView.Adapter<Categori
             threadName.setText(threadNameText);
 
         }
+
     }
 }

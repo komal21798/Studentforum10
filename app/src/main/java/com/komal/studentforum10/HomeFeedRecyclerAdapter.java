@@ -67,6 +67,11 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
                     holder.setUsername(postUsername);
                     holder.setUserimage(postUserimage);
 
+                } else {
+
+                    String error = task.getException().getMessage();
+                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+
                 }
 
             }
