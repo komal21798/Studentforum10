@@ -4,7 +4,7 @@ import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 
-public class HomeFeed {
+public class HomeFeed extends HomeFeedId {
 
     public String post_name;
     public String post_desc;
