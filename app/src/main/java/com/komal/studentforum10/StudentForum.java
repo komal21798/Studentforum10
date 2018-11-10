@@ -78,8 +78,6 @@ public class StudentForum extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studentforum);
 
-
-
         mAuth = FirebaseAuth.getInstance();
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavView);

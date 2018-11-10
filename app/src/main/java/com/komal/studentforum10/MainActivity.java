@@ -31,13 +31,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(!isConnected(MainActivity.this)) buildDialog(MainActivity.this).show();
-        else {
-            Toast.makeText(MainActivity.this,"Welcome", Toast.LENGTH_SHORT).show();
+        if(!isConnected(MainActivity.this)) {
+
+            buildDialog(MainActivity.this).show();
+
+        } else {
+
             setContentView(R.layout.activity_main);
+
         }
-
-
 
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
