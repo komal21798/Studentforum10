@@ -119,7 +119,7 @@ public class NewPostFragment extends Fragment {
                     postMap.put("post_desc", post_desc);
                     postMap.put("timestamp", FieldValue.serverTimestamp());
 
-                    firebaseFirestore/*.collection("Threads").document(post_thread)*/.collection("Posts").document(post_name).set(postMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    firebaseFirestore.collection("Threads").document(post_thread).collection("Posts").document(post_name).set(postMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
 
