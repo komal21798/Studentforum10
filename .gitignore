@@ -6,6 +6,11 @@
 /.idea/workspace.xml
 /.idea/misc.xml
 /.idea/caches/build_file_checksums.ser
+<<<<<<< HEAD
+=======
+/.idea/caches/build_file_checksums.ser
+.idea/caches/build_file_checksums.ser
+>>>>>>> a4b35191bf23bfd68a12ba91e56c7a6a0502cd36
 .DS_Store
 /build
 /captures

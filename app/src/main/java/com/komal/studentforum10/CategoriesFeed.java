@@ -1,6 +1,6 @@
 package com.komal.studentforum10;
 
-public class CategoriesFeed {
+public class CategoriesFeed extends CategoryId {
 
     private String thread_desc;
     private String thread_name;

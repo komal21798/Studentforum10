@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ public class ExploreFragment extends Fragment {
 
     private FirebaseAuth firebaseAuth;
 
-
+    private DocumentSnapshot lastVisible;
 
     public ExploreFragment() {
         // Required empty public constructor
@@ -44,7 +46,7 @@ public class ExploreFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater,final ViewGroup container,
                              Bundle savedInstanceState) {
         View v;
         v = inflater.inflate(R.layout.fragment_explore, container, false);
@@ -61,9 +63,30 @@ public class ExploreFragment extends Fragment {
 
         if (firebaseAuth.getCurrentUser() != null) {
 
-            firebaseFirestore.collection("Posts").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+            exploreFeedView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+
+                    Boolean reachedBottom = !recyclerView.canScrollVertically(1);
+
+                    if(reachedBottom){
+                        loadMorePost();
+                    }
+                }
+            });
+
+            Query firstQuery = firebaseFirestore.collection("Posts")
+                    .orderBy("timestamp",Query.Direction.DESCENDING)
+                    .limit(15);
+
+            firstQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                    // Get the last visible document
+                    lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() -1);
 
                     for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
@@ -80,9 +103,42 @@ public class ExploreFragment extends Fragment {
 
                 }
             });
+
         }
 
         return v;
+    }
+
+    public void loadMorePost(){
+
+        Query nextQuery = firebaseFirestore.collection("Posts")
+                .orderBy("timestamp",Query.Direction.DESCENDING)
+                .startAfter(lastVisible)
+                .limit(15);
+
+        nextQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                if(!queryDocumentSnapshots.isEmpty()) {
+
+                    lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+
+                            ExploreFeed exploreFeed = doc.getDocument().toObject(ExploreFeed.class);
+                            exploreFeedList.add(exploreFeed);
+
+                            exploreFeedRecyclerAdapter.notifyDataSetChanged();
+
+                        }
+
+                    }
+                }
+            }
+        });
     }
 
 }

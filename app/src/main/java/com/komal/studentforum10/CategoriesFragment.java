@@ -70,7 +70,9 @@ public class CategoriesFragment extends Fragment {
 
                         if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                            CategoriesFeed categoriesFeed = doc.getDocument().toObject(CategoriesFeed.class);
+                            String categoryId = doc.getDocument().getId();
+
+                            CategoriesFeed categoriesFeed = doc.getDocument().toObject(CategoriesFeed.class).withId(categoryId);
                             categoriesFeedList.add(categoriesFeed);
 
                             categoriesFeedRecyclerAdapter.notifyDataSetChanged();

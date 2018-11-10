@@ -22,18 +22,18 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeedRecyclerAdapter.ViewHolder> {
+public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRecyclerAdapter.ViewHolder> {
 
-    public List<ExploreFeed> exploreFeedList;
+    public List<ThreadPage> threadPageList;
     private FirebaseFirestore firebaseFirestore;
     private Context context;
 
-    public ExploreFeedRecyclerAdapter(List<ExploreFeed> exploreFeedList) {
 
-        this.exploreFeedList = exploreFeedList;
+    public ThreadPageRecyclerAdapter(List<ThreadPage> threadPageList){
+
+        this.threadPageList = threadPageList;
 
     }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -48,10 +48,10 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
-        String postNameData = exploreFeedList.get(position).getPost_name();
-        holder.setPostName(postNameData);
+        String postName = threadPageList.get(position).getPost_name();
+        holder.setPostName(postName);
 
-        String user_id = exploreFeedList.get(position).getUser_id();
+        String user_id = threadPageList.get(position).getUser_id();
 
         firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -79,7 +79,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
         try {
 
-            long millisecond = exploreFeedList.get(position).getTimestamp().getTime();
+            long millisecond = threadPageList.get(position).getTimestamp().getTime();
             String dateString = DateFormat.format("dd/MM/yyyy", new Date(millisecond)).toString();
             holder.setPostDate(dateString);
 
@@ -88,15 +88,14 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             Toast.makeText(context, "Exception : " + e.getMessage(), Toast.LENGTH_SHORT).show();
 
         }
-
     }
 
     @Override
     public int getItemCount() {
-        return exploreFeedList.size();
+        return threadPageList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
         private View mView;
         private TextView postName;
@@ -124,7 +123,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
         }
 
-        public void setUserimage(String postUserimageText) {
+        public void setUserimage(String postUserimageText){
 
             postUserimage = mView.findViewById(R.id.postUserImage);
 
@@ -140,6 +139,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             postDate.setText(postDateText);
 
         }
-    }
-}
 
+    }
+
+}

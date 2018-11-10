@@ -3,6 +3,7 @@ package com.komal.studentforum10;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -49,6 +50,8 @@ public class AccountSetupActivity extends AppCompatActivity {
     private String user_id;
 
     private Uri mainImageURI = null;
+
+    private Bitmap compressedImageFile;
 
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
@@ -140,14 +143,14 @@ public class AccountSetupActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 final String user_name = setup_name.getText().toString();
-                setup_progress.setVisibility(View.VISIBLE);
 
-                if(!TextUtils.isEmpty(user_name)) {
+                if(!TextUtils.isEmpty(user_name) && mainImageURI != null) {
 
                     if (isChanged) {
 
                         if (!TextUtils.isEmpty(user_name)) {
 
+                            setup_progress.setVisibility(View.VISIBLE);
                             final String user_id = firebaseAuth.getCurrentUser().getUid();
 
                             final StorageReference image_path = storageReference.child("profile_images").child(user_id + ".jpg");
