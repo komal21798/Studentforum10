@@ -55,7 +55,7 @@
         android:backgroundTint="@color/colorAccent"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:text="Subscribed"
+        android:text="Unsubscirbe"
         android:textColor="#ffffff"
         android:textSize="12sp"
         android:visibility="invisible"

@@ -48,6 +48,8 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
+        holder.setIsRecyclable(false);
+
         String postName = threadPageList.get(position).getPost_name();
         holder.setPostName(postName);
 

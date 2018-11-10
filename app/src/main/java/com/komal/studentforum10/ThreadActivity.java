@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,13 +16,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -28,6 +33,8 @@ public class ThreadActivity extends AppCompatActivity {
 
     private TextView threadName;
     private TextView threadSubscribers;
+    private Button subscribeBtn;
+    private Button subscribedBtn;
 
     private RecyclerView threadPageView;
     private List<ThreadPage> threadPageList;
@@ -61,6 +68,8 @@ public class ThreadActivity extends AppCompatActivity {
         threadName = findViewById(R.id.threadName);
         threadName.setText(CategoryId);
         threadSubscribers = findViewById(R.id.threadSubscribers);
+        subscribeBtn = findViewById(R.id.subsrcibeBtn);
+        subscribedBtn = findViewById(R.id.subsrcibedBtn);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -150,6 +159,65 @@ public class ThreadActivity extends AppCompatActivity {
 
                     isFirstPageFirstLoaded = false;
 
+                }
+            });
+
+
+            //jugaad - subscribing to a thread - not implemented yet
+            subscribeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    subscribeBtn.setVisibility(View.INVISIBLE);
+                    subscribedBtn.setVisibility(View.VISIBLE);
+
+                    firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
+                            .document(user_id)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                            if (!task.getResult().exists()) {
+
+                                Map<String, Object> subscribersMap = new HashMap<>();
+                                subscribersMap.put("timestamp", FieldValue.serverTimestamp());
+
+                                firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id).set(subscribersMap);
+
+                            } else {
+
+                                firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id).delete();
+
+                            }
+                        }
+                    });
+
+                }
+            });
+
+            //unsubscribing - not implemented yet
+            subscribedBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    subscribedBtn.setVisibility(View.INVISIBLE);
+                    subscribeBtn.setVisibility(View.VISIBLE);
+
+                    firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
+                            .document(user_id)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                    if (task.getResult().exists()){
+
+                                        firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id).delete();
+
+                                    }
+                                }
+                            });
                 }
             });
         }
