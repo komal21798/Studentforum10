@@ -1,17 +1,23 @@
 package com.komal.studentforum10;
 
+import java.util.Date;
+
 public class ExploreFeed {
 
     public String post_name;
     public String post_desc;
     public String user_id;
+    public Date timestamp;
 
     public ExploreFeed() {}
 
-    public ExploreFeed(String post_name, String post_desc, String user_id) {
+
+
+    public ExploreFeed(String post_name, String post_desc, String user_id, Date timestamp) {
         this.post_name = post_name;
         this.post_desc = post_desc;
         this.user_id = user_id;
+        this.timestamp = timestamp;
     }
 
     public String getPost_name() {
@@ -37,6 +43,14 @@ public class ExploreFeed {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
 }

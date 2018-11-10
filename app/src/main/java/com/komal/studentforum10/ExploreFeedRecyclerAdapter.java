@@ -3,10 +3,12 @@ package com.komal.studentforum10;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -15,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -56,7 +59,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
                 String postUsername;
                 String postUserimage;
-                if (task.isSuccessful()) {
+                if(task.isSuccessful()){
 
                     postUsername = task.getResult().getString("username");
                     postUserimage = task.getResult().getString("profile_image");
@@ -64,10 +67,27 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
                     holder.setUsername(postUsername);
                     holder.setUserimage(postUserimage);
 
+                } else {
+
+                    String error = task.getException().getMessage();
+                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+
                 }
 
             }
         });
+
+        try {
+
+            long millisecond = exploreFeedList.get(position).getTimestamp().getTime();
+            String dateString = DateFormat.format("dd/MM/yyyy", new Date(millisecond)).toString();
+            holder.setPostDate(dateString);
+
+        } catch (Exception e) {
+
+            Toast.makeText(context, "Exception : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+        }
 
     }
 

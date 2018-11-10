@@ -64,6 +64,7 @@ public class HomeFragment extends Fragment {
         homeFeedView.setAdapter(homeFeedRecyclerAdapter);
 
         if (firebaseAuth.getCurrentUser() != null) {
+
             homeFeedView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
