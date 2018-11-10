@@ -67,8 +67,8 @@
 
             <ImageView
                 android:id="@+id/postUpvoteBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="32dp"
+                android:layout_height="28dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
@@ -82,10 +82,8 @@
                 android:id="@+id/postUpvoteCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="123"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/postUpvoteBtn"
                 app:layout_constraintTop_toBottomOf="@+id/postName" />

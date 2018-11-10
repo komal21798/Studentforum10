@@ -8,7 +8,7 @@
     tools:layout_editor_absoluteY="81dp">
 
     <TextView
-        android:id="@+id/threadNameCategories"
+        android:id="@+id/threadName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -24,27 +24,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
-        android:text="Subscribers"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/threadNameCategories" />
+        app:layout_constraintTop_toBottomOf="@+id/threadName" />
 
     <Button
-        android:id="@+id/forgotPasswordBtn"
+        android:id="@+id/subsrcibeBtn"
         android:layout_width="97dp"
         android:layout_height="32dp"
-        android:layout_marginStart="100dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/colorAccent"
+        android:backgroundTint="@color/colorPrimary"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:text="Subscribe"
         android:textColor="#ffffff"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/threadNameCategories"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/subsrcibedBtn"
+        android:layout_width="97dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorAccent"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:text="Subscribed"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.RecyclerView

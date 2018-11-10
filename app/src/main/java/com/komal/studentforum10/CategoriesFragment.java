@@ -16,6 +16,7 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -36,7 +37,6 @@ public class CategoriesFragment extends Fragment {
     private FirebaseFirestore firebaseFirestore;
 
     private FirebaseAuth firebaseAuth;
-
 
     public CategoriesFragment() {
         // Required empty public constructor
@@ -62,7 +62,9 @@ public class CategoriesFragment extends Fragment {
 
         if (firebaseAuth.getCurrentUser() != null) {
 
-            firebaseFirestore.collection("Threads").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+            firebaseFirestore.collection("Threads")
+                    .orderBy("thread_name",Query.Direction.ASCENDING)
+                    .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 

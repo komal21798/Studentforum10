@@ -77,7 +77,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
                 String postUsername;
                 String postUserimage;
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
 
                     postUsername = task.getResult().getString("username");
                     postUserimage = task.getResult().getString("profile_image");
@@ -101,75 +101,76 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             String dateString = DateFormat.format("dd/MM/yyyy", new Date(millisecond)).toString();
             holder.setPostDate(dateString);
 
-            //Get UpVote Counts
-            firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                    if(!queryDocumentSnapshots.isEmpty())
-                    {
-                        int count = queryDocumentSnapshots.size();
-
-                        holder.updateUpvotesCount(count);
-
-                    } else {
-
-                        holder.updateUpvotesCount(0);
-
-                    }
-                }
-            });
-
-            //Get UpVote
-
-            firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-
-                    if (documentSnapshot.exists()){
-                        holder.postUpvoteBtn.setImageDrawable(context.getDrawable(R.drawable.action_upvote_accent));
-                        holder.postUpvoteCount.setTextColor(ContextCompat.getColor(context, R.color.upVote_Accent));
-                    }
-                    else
-                    {
-                        holder.postUpvoteBtn.setImageDrawable(context.getDrawable(R.drawable.action_upvote_gray));
-                        holder.postUpvoteCount.setTextColor(ContextCompat.getColor(context, R.color.upVote_Gray));
-                    }
-
-                }
-            });
-
-
-            //UpVote Feature
-            holder.postUpvoteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                            if (!task.getResult().exists()){
-
-                                Map<String, Object> upvotesMap = new HashMap<>();
-                                upvotesMap.put("timestamp", FieldValue.serverTimestamp());
-
-                                firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").document(currentUserId).set(upvotesMap);
-                            }
-                            else {
-
-                                firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").document(currentUserId).delete();
-                            }
-                        }
-                    });
-
-                }
-            });
-
         } catch (Exception e) {
 
             Toast.makeText(context, "Exception : " + e.getMessage(), Toast.LENGTH_SHORT).show();
 
         }
+
+        //Get UpVote Counts
+        firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    int count = queryDocumentSnapshots.size();
+
+                    holder.updateUpvotesCount(count);
+
+                } else {
+
+                    holder.updateUpvotesCount(0);
+
+                }
+            }
+        });
+
+        //Get UpVote
+        firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                if (documentSnapshot.exists()) {
+
+                    holder.postUpvoteBtn.setImageDrawable(context.getDrawable(R.drawable.action_upvote_accent));
+                    holder.postUpvoteCount.setTextColor(ContextCompat.getColor(context, R.color.upVote_Accent));
+
+                } else {
+
+                    holder.postUpvoteBtn.setImageDrawable(context.getDrawable(R.drawable.action_upvote_gray));
+                    holder.postUpvoteCount.setTextColor(ContextCompat.getColor(context, R.color.upVote_Gray));
+
+                }
+
+            }
+        });
+
+
+        //UpVote Feature
+        holder.postUpvoteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                        if (!task.getResult().exists()) {
+
+                            Map<String, Object> upvotesMap = new HashMap<>();
+                            upvotesMap.put("timestamp", FieldValue.serverTimestamp());
+
+                            firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").document(currentUserId).set(upvotesMap);
+                        } else {
+
+                            firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").document(currentUserId).delete();
+                        }
+                    }
+                });
+
+            }
+        });
+
 
     }
 
@@ -178,7 +179,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
         return homeFeedList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private View mView;
         private TextView postName;
@@ -211,7 +212,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
         }
 
-        public void setUserimage(String postUserimageText){
+        public void setUserimage(String postUserimageText) {
 
             postUserimage = mView.findViewById(R.id.postUserImage);
 
@@ -228,7 +229,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
         }
 
-        public void updateUpvotesCount (int count) {
+        public void updateUpvotesCount(int count) {
             postUpvoteCount.setText(count + " "); //Space so no error while converting to string
         }
 

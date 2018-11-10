@@ -1,11 +1,15 @@
 package com.komal.studentforum10;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,6 +27,7 @@ import javax.annotation.Nullable;
 public class ThreadActivity extends AppCompatActivity {
 
     private TextView threadName;
+    private TextView threadSubscribers;
 
     private RecyclerView threadPageView;
     private List<ThreadPage> threadPageList;
@@ -35,13 +40,32 @@ public class ThreadActivity extends AppCompatActivity {
 
     private DocumentSnapshot lastVisible;
 
+    private String CategoryId;
+    private String user_id;
+    private int subscribersCount = 0;
+
+    private Boolean isFirstPageFirstLoaded = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thread);
 
+
+        //Get categoryId from previous activity i.e. category fragment
+        Bundle bundle = getIntent().getExtras();
+        CategoryId = bundle.getString("CategoryId");
+        Toast.makeText(this, "Category id: " + CategoryId, Toast.LENGTH_SHORT).show();
+
+
+        threadName = findViewById(R.id.threadName);
+        threadName.setText(CategoryId);
+        threadSubscribers = findViewById(R.id.threadSubscribers);
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+
+        user_id = firebaseAuth.getCurrentUser().getUid();
 
         threadPageView = (RecyclerView) findViewById(R.id.threadPageView);
         threadPageList = new ArrayList<>();
@@ -50,11 +74,8 @@ public class ThreadActivity extends AppCompatActivity {
         threadPageView.setLayoutManager(new LinearLayoutManager(this));
         threadPageView.setAdapter(threadPageRecyclerAdapter);
 
-        threadName = findViewById(R.id.threadNameCategories);
-
+        //for loading the posts
         if (firebaseAuth.getCurrentUser() != null) {
-
-            String thread_name = threadName.getText().toString();
 
             threadPageView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
@@ -63,14 +84,35 @@ public class ThreadActivity extends AppCompatActivity {
 
                     Boolean reachedBottom = !recyclerView.canScrollVertically(1);
 
-                    if(reachedBottom){
+                    if (reachedBottom) {
+
                         loadMorePost();
+
                     }
                 }
             });
 
-            Query firstQuery = firebaseFirestore.collection("Posts")
-                    .orderBy("timestamp",Query.Direction.DESCENDING)
+            //for getting the number of subsrcibers
+            firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                            if (!queryDocumentSnapshots.isEmpty()) {
+
+                                subscribersCount = queryDocumentSnapshots.size();
+
+                            }
+
+                            threadSubscribers.setText(subscribersCount + " subscribers");
+
+                        }
+                    });
+
+            Query firstQuery = firebaseFirestore.collection("Threads")
+                    .document(CategoryId)
+                    .collection("Posts")
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
                     .limit(15);
 
             firstQuery.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
@@ -78,15 +120,27 @@ public class ThreadActivity extends AppCompatActivity {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                    // Get the last visible document
-                    lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() -1);
+                    if (isFirstPageFirstLoaded) {
+
+                        // Get the last visible document
+                        lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+
+                    }
 
                     for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
                         if (doc.getType() == DocumentChange.Type.ADDED) {
 
                             ThreadPage threadPage = doc.getDocument().toObject(ThreadPage.class);
-                            threadPageList.add(threadPage);
+                            if (isFirstPageFirstLoaded) {
+
+                                threadPageList.add(threadPage);
+
+                            } else {
+
+                                threadPageList.add(0, threadPage);
+
+                            }
 
                             threadPageRecyclerAdapter.notifyDataSetChanged();
 
@@ -94,16 +148,20 @@ public class ThreadActivity extends AppCompatActivity {
 
                     }
 
+                    isFirstPageFirstLoaded = false;
+
                 }
             });
         }
 
     }
 
-    public void loadMorePost(){
+    public void loadMorePost() {
 
-        Query nextQuery = firebaseFirestore.collection("Posts")
-                .orderBy("timestamp",Query.Direction.DESCENDING)
+        Query nextQuery = firebaseFirestore.collection("Threads")
+                .document(CategoryId)
+                .collection("Posts")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .startAfter(lastVisible)
                 .limit(15);
 
@@ -111,7 +169,7 @@ public class ThreadActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                if(!queryDocumentSnapshots.isEmpty()) {
+                if (!queryDocumentSnapshots.isEmpty()) {
 
                     lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 
@@ -125,7 +183,6 @@ public class ThreadActivity extends AppCompatActivity {
                             threadPageRecyclerAdapter.notifyDataSetChanged();
 
                         }
-
                     }
                 }
             }

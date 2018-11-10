@@ -44,16 +44,20 @@ public class CategoriesFeedRecyclerAdapter extends RecyclerView.Adapter<Categori
         final String threadNameData = categoriesFeedList.get(position).getThread_name();
         holder.setThreadName(threadNameData);
 
+
+        //onClick event of a single category or thread
         holder.threadArrowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent(context, ThreadActivity.class);
+                intent.putExtra("CategoryId", CategoryId);
                 context.startActivity(intent);
 
 
             }
         });
+
     }
 
     @Override
@@ -76,7 +80,7 @@ public class CategoriesFeedRecyclerAdapter extends RecyclerView.Adapter<Categori
 
         public void setThreadName(String threadNameText) {
 
-            threadName = mView.findViewById(R.id.threadNameCategories);
+            threadName = mView.findViewById(R.id.threadNameFragment);
             threadName.setText(threadNameText);
 
         }
