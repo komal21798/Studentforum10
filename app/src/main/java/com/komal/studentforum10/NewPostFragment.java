@@ -7,15 +7,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,11 +36,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class NewPostFragment extends Fragment {
 
-    private EditText newPostThread;
+    public String[] Threads = new String[]{
+            "thread1","thread2","thread3","thread4"
+    };
+
+    private AutoCompleteTextView newPostThread;
     private EditText newPostName;
     private EditText newPostDesc;
     private Button newPostBtn;
     private ProgressBar newPostProgress;
+    private ArrayAdapter<String> adapter;
 
     private FirebaseAuth firebaseAuth;
     private StorageReference storageReference;
@@ -55,6 +64,8 @@ public class NewPostFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+
 
     public NewPostFragment() {
 
@@ -78,6 +89,7 @@ public class NewPostFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -87,11 +99,17 @@ public class NewPostFragment extends Fragment {
         View v;
         v = inflater.inflate(R.layout.fragment_new_post, container, false);
 
-        newPostThread = (EditText) v.findViewById(R.id.newPostThread);
+        newPostThread = (AutoCompleteTextView) v.findViewById(R.id.newPostThread);
         newPostName = (EditText) v.findViewById(R.id.newPostName);
         newPostDesc = (EditText) v.findViewById(R.id.newPostDesc);
         newPostBtn = (Button) v.findViewById(R.id.newPostBtn);
         newPostProgress = (ProgressBar) v.findViewById(R.id.newPostProgress);
+       // newresultlist = (RecyclerView) v.findViewById(R.id.resultlist);
+
+        adapter= new ArrayAdapter<String>(getActivity(),android.R.layout.select_dialog_item, Threads);
+        newPostThread.setThreshold(1);
+        newPostThread.setAdapter(adapter);
+
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -148,7 +166,10 @@ public class NewPostFragment extends Fragment {
         });
 
         return  v;
+
+
     }
+
 
     public void goToHome() {
 
@@ -185,5 +206,12 @@ public class NewPostFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+
     }
+
+
+
+
+
+
 }

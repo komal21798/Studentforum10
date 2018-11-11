@@ -9,7 +9,7 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/newPostThread"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -21,7 +21,8 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:completionThreshold="1" />
 
     <EditText
         android:id="@+id/newPostName"
@@ -117,6 +118,7 @@
         android:layout_height="13dp"
         android:indeterminate="false"
         android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/newPostThread"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
