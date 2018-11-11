@@ -2,11 +2,13 @@ package com.komal.studentforum10;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,11 +16,20 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -26,6 +37,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
     public List<ExploreFeed> exploreFeedList;
     private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
     private Context context;
 
     public ExploreFeedRecyclerAdapter(List<ExploreFeed> exploreFeedList) {
@@ -40,6 +52,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_post_item, parent, false);
         firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         context = parent.getContext();
         return new ViewHolder(view);
 
@@ -47,6 +60,11 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+
+        holder.setIsRecyclable(false);
+
+        final String exploreFeedId = exploreFeedList.get(position).exploreFeedId;
+        final String currentUserId = firebaseAuth.getCurrentUser().getUid();
 
         String postNameData = exploreFeedList.get(position).getPost_name();
         holder.setPostName(postNameData);
@@ -83,6 +101,71 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             String dateString = DateFormat.format("dd/MM/yyyy", new Date(millisecond)).toString();
             holder.setPostDate(dateString);
 
+            //Get Likes Counts
+            firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    if(!queryDocumentSnapshots.isEmpty())
+                    {
+                        int count = queryDocumentSnapshots.size();
+
+                        holder.updateLikeCount(count);
+
+                    } else {
+
+                        holder.updateLikeCount(0);
+
+                    }
+                }
+            });
+
+            //Get Likes
+
+            firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                    if (documentSnapshot.exists()){
+                        holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.action_like_accent));
+                        holder.postLikeCount.setTextColor(ContextCompat.getColor(context, R.color.Like_Accent));
+                    }
+                    else
+                    {
+                        holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.action_like_gray));
+                        holder.postLikeCount.setTextColor(ContextCompat.getColor(context, R.color.Like_Gray));
+                    }
+
+                }
+            });
+
+
+            //Likes Feature
+            holder.postLikeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                            if (!task.getResult().exists()){
+                                Map<String, Object> likesMap = new HashMap<>();
+                                likesMap.put("timestamp", FieldValue.serverTimestamp());
+
+                                firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).set(likesMap);
+
+                            }
+                            else {
+
+                                firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).delete();
+
+                            }
+                        }
+                    });
+
+                }
+            });
+
         } catch (Exception e) {
 
             Toast.makeText(context, "Exception : " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -103,11 +186,16 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
         private TextView postUsername;
         private CircleImageView postUserimage;
         private TextView postDate;
+        private ImageView postLikeBtn;
+        private TextView postLikeCount;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             mView = itemView;
+
+            postLikeBtn = mView.findViewById(R.id.postLikeBtn);
+            postLikeCount = mView.findViewById(R.id.postLikeCount);
         }
 
         public void setPostName(String postText) {
@@ -138,7 +226,10 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
             postDate = mView.findViewById(R.id.postDate);
             postDate.setText(postDateText);
+            }
 
+        public void updateLikeCount (int count) {
+            postLikeCount.setText(count + " "); //Space so no error while converting to string
         }
     }
 }

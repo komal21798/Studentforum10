@@ -8,7 +8,7 @@
     tools:layout_editor_absoluteY="81dp">
 
     <TextView
-        android:id="@+id/threadName"
+        android:id="@+id/threadNameCategories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -24,14 +24,17 @@
         android:id="@+id/threadSubscribers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
+        android:text="Subscribers"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/threadName" />
+        app:layout_constraintTop_toBottomOf="@+id/threadNameCategories" />
 
     <Button
-        android:id="@+id/subsrcibeBtn"
+        android:id="@+id/forgotPasswordBtn"
         android:layout_width="97dp"
         android:layout_height="32dp"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
@@ -60,8 +63,8 @@
         android:text="Unsubscribe"
         android:textColor="#ffffff"
         android:textSize="12sp"
-        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/threadNameCategories"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View

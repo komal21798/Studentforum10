@@ -104,7 +104,6 @@ public class HomeFragment extends Fragment {
                                 String homeFeedId = doc.getDocument().getId();
                                 HomeFeed homeFeed = doc.getDocument().toObject(HomeFeed.class).withId(homeFeedId);
                                 if (isFirstPageFirstLoaded) {
-
                                     homeFeedList.add(homeFeed);
 
                                 } else {
@@ -112,8 +111,7 @@ public class HomeFragment extends Fragment {
                                     homeFeedList.add(0, homeFeed);
 
                                 }
-
-                                homeFeedRecyclerAdapter.notifyDataSetChanged();
+                              homeFeedRecyclerAdapter.notifyDataSetChanged();
 
                             }
 
@@ -123,9 +121,7 @@ public class HomeFragment extends Fragment {
 
                     }
                 }
-
             });
-
         }
 
         return v;
