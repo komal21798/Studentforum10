@@ -124,7 +124,8 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
         });
 
         //Get Likes
-        firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
@@ -149,7 +150,8 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             @Override
             public void onClick(View view) {
 
-                firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
