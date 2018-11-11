@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
 
                     Boolean reachedBottom = !recyclerView.canScrollVertically(1);
 
-                    if(reachedBottom){
+                    if (reachedBottom) {
                         loadMorePost();
                     }
                 }
@@ -81,37 +81,45 @@ public class HomeFragment extends Fragment {
 
             //To order the posts according to the Timestamp added a first Query and added a limit to load 15 posts at a time (Changeable)
             Query firstQuery = firebaseFirestore.collection("Posts")
-                    .orderBy("timestamp",Query.Direction.DESCENDING)
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
                     .limit(15);
 
             firstQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
-              
+
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                  if (isFirstPageFirstLoaded) {
+                    if (!queryDocumentSnapshots.isEmpty()) {
 
-                      // Get the last visible document
-                      lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                        if (isFirstPageFirstLoaded) {
 
-                  }
-                      for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                            // Get the last visible document
+                            lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 
-                          if (doc.getType() == DocumentChange.Type.ADDED) {
+                        }
+                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
-                              String homeFeedId = doc.getDocument().getId();
-                              HomeFeed homeFeed = doc.getDocument().toObject(HomeFeed.class).withId(homeFeedId);
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
+
+                                String homeFeedId = doc.getDocument().getId();
+                                HomeFeed homeFeed = doc.getDocument().toObject(HomeFeed.class).withId(homeFeedId);
                                 if (isFirstPageFirstLoaded) {
                                     homeFeedList.add(homeFeed);
-                                } else
-                                {
-                                    homeFeedList.add(0,homeFeed);
+
+                                } else {
+
+                                    homeFeedList.add(0, homeFeed);
+
                                 }
                               homeFeedRecyclerAdapter.notifyDataSetChanged();
 
-                          }
-                      }
-                      isFirstPageFirstLoaded = false;
+                            }
+
+                        }
+
+                        isFirstPageFirstLoaded = false;
+
+                    }
                 }
             });
         }
@@ -119,10 +127,10 @@ public class HomeFragment extends Fragment {
         return v;
     }
 
-    public void loadMorePost(){
+    public void loadMorePost() {
 
         Query nextQuery = firebaseFirestore.collection("Posts")
-                .orderBy("timestamp",Query.Direction.DESCENDING)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .startAfter(lastVisible)
                 .limit(15);
 
@@ -130,7 +138,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                if(!queryDocumentSnapshots.isEmpty()) {
+                if (!queryDocumentSnapshots.isEmpty()) {
 
                     lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 

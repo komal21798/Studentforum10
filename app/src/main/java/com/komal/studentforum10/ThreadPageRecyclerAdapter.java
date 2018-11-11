@@ -41,11 +41,12 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
     private Context context;
 
 
-    public ThreadPageRecyclerAdapter(List<ThreadPage> threadPageList){
+    public ThreadPageRecyclerAdapter(List<ThreadPage> threadPageList) {
 
         this.threadPageList = threadPageList;
 
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -77,7 +78,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
                 String postUsername;
                 String postUserimage;
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
 
                     postUsername = task.getResult().getString("username");
                     postUserimage = task.getResult().getString("profile_image");
@@ -179,7 +180,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
         return threadPageList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private View mView;
         private TextView postName;
@@ -212,7 +213,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
         }
 
-        public void setUserimage(String postUserimageText){
+        public void setUserimage(String postUserimageText) {
 
             postUserimage = mView.findViewById(R.id.postUserImage);
 
