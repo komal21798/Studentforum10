@@ -19,7 +19,7 @@
         android:ems="10"
         android:hint="Name of thread"
         android:inputType="textPersonName"
-        android:maxLength="40"
+        android:maxLength="24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -50,7 +50,6 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/rounded_button"
         android:backgroundTint="@color/colorAccent"
-        android:onClick="onSubmitClick"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
         android:text="Submit"
