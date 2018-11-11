@@ -5,4 +5,7 @@
     <color name="colorAccent">#f9aa33</color>
 
     <color name="black_overlay">#66000000</color>
+
+    <color name="Like_Gray">#747474</color>
+    <color name="Like_Accent">#f9aa33</color>
 </resources>

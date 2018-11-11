@@ -1,11 +1,13 @@
 package com.komal.studentforum10;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,6 +20,7 @@ public class CategoriesFeedRecyclerAdapter extends RecyclerView.Adapter<Categori
     private FirebaseFirestore firebaseFirestore;
     private Context context;
 
+
     public CategoriesFeedRecyclerAdapter(List<CategoriesFeed> categoriesFeedList){
 
         this.categoriesFeedList = categoriesFeedList;
@@ -28,8 +31,7 @@ public class CategoriesFeedRecyclerAdapter extends RecyclerView.Adapter<Categori
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_category_item, parent, false);
-        //firebaseFirestore = FirebaseFirestore.getInstance();
-        //context = parent.getContext();
+        context = parent.getContext();
         return new ViewHolder(view);
 
     }
@@ -37,9 +39,21 @@ public class CategoriesFeedRecyclerAdapter extends RecyclerView.Adapter<Categori
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        String threadNameData = categoriesFeedList.get(position).getThread_name();
+        final String CategoryId = categoriesFeedList.get(position).CategoryId;
+
+        final String threadNameData = categoriesFeedList.get(position).getThread_name();
         holder.setThreadName(threadNameData);
 
+        holder.threadArrowBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(context, ThreadActivity.class);
+                context.startActivity(intent);
+
+
+            }
+        });
     }
 
     @Override
@@ -51,16 +65,18 @@ public class CategoriesFeedRecyclerAdapter extends RecyclerView.Adapter<Categori
 
         private View mView;
         private TextView threadName;
+        private ImageView threadArrowBtn;
 
         public ViewHolder(View itemView) {
             super(itemView);
-
             mView = itemView;
+
+            threadArrowBtn = mView.findViewById(R.id.threadArrow);
         }
 
         public void setThreadName(String threadNameText) {
 
-            threadName = mView.findViewById(R.id.threadName);
+            threadName = mView.findViewById(R.id.threadNameCategories);
             threadName.setText(threadNameText);
 
         }

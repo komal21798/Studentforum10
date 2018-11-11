@@ -66,14 +66,20 @@ public class CategoriesFragment extends Fragment {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                    if(!queryDocumentSnapshots.isEmpty()){
 
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
-                            CategoriesFeed categoriesFeed = doc.getDocument().toObject(CategoriesFeed.class);
-                            categoriesFeedList.add(categoriesFeed);
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                            categoriesFeedRecyclerAdapter.notifyDataSetChanged();
+                                String categoryId = doc.getDocument().getId();
+
+                                CategoriesFeed categoriesFeed = doc.getDocument().toObject(CategoriesFeed.class).withId(categoryId);
+                                categoriesFeedList.add(categoriesFeed);
+
+                                categoriesFeedRecyclerAdapter.notifyDataSetChanged();
+
+                            }
 
                         }
 

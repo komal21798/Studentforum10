@@ -1,10 +1,8 @@
 package com.komal.studentforum10;
 
-import com.google.firebase.firestore.ServerTimestamp;
-
 import java.util.Date;
 
-public class HomeFeed extends HomeFeedId {
+public class ThreadPage {
 
     public String post_name;
     public String post_desc;
@@ -19,11 +17,11 @@ public class HomeFeed extends HomeFeedId {
         this.timestamp = timestamp;
     }
 
-    public HomeFeed(){
+    public ThreadPage(){
 
     }
 
-    public HomeFeed(String post_name, String post_desc, String user_id, Date timestamp) {
+    public ThreadPage(String post_name, String post_desc, String user_id, Date timestamp) {
         this.post_name = post_name;
         this.post_desc = post_desc;
         this.user_id = user_id;

@@ -2,13 +2,18 @@ package com.komal.studentforum10;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -96,34 +101,48 @@ public class StudentForum extends AppCompatActivity {
 
         final NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
 
-        nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        //to check for internet connection
+        if(!isConnected(StudentForum.this)) {
 
-                Intent myIntent;
+            buildDialog(StudentForum.this).show();
 
-                int id = item.getItemId();
+        }
 
-                if(id == R.id.my_profile){
+        else {
 
-                    setupAccount();
+            nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+                    Intent myIntent;
+
+                    int id = item.getItemId();
+
+                    if(id == R.id.my_profile){
+
+                        setupAccount();
+
+                    }
+
+                    else if(id == R.id.settings){
+                        settings();
+                    }
+
+                    else if(id == R.id.logout){
+
+                        logout();
+
+                    }
+
+                    return true;
                 }
+            });
 
-                else if(id == R.id.settings){
-                    Toast.makeText(StudentForum.this, "Settings", Toast.LENGTH_SHORT).show();
-                }
+        }
 
-                else if(id == R.id.logout){
 
-                    logout();
-
-                }
-
-                return true;
-            }
-        });
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -140,9 +159,29 @@ public class StudentForum extends AppCompatActivity {
 
     public void logout(){
 
-        mAuth.signOut();
-        goToLogin();
-        finish();
+
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(StudentForum.this);
+        builder.setMessage(" Are you sure you want to logout ?");
+        builder.setCancelable(true);
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mAuth.signOut();
+                goToLogin();
+                finish();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
 
     }
 
@@ -152,4 +191,43 @@ public class StudentForum extends AppCompatActivity {
         startActivity(myIntent);
 
     }
+
+    public void settings() {
+        Intent myIntent = new Intent(StudentForum.this, SettingsActivity.class);
+        startActivity(myIntent);
+    }
+
+    public boolean isConnected(Context context) {
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netinfo = cm.getActiveNetworkInfo();
+
+        if (netinfo != null && netinfo.isConnectedOrConnecting()) {
+            android.net.NetworkInfo wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            android.net.NetworkInfo mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+            if((mobile != null && mobile.isConnectedOrConnecting()) || (wifi != null && wifi.isConnectedOrConnecting())) return true;
+            else return false;
+        } else
+            return false;
+    }
+
+    public AlertDialog.Builder buildDialog(Context c) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle("No Internet Connection");
+        builder.setMessage("You need to have Mobile Data or wifi to access this. Press ok to Exit");
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                finish();
+            }
+        });
+
+        return builder;
+    }
+
 }

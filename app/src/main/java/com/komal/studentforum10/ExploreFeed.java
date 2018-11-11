@@ -2,7 +2,7 @@ package com.komal.studentforum10;
 
 import java.util.Date;
 
-public class ExploreFeed {
+public class ExploreFeed extends ExploreFeedId {
 
     public String post_name;
     public String post_desc;
