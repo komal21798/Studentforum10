@@ -12,8 +12,10 @@
         app:cardCornerRadius="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -66,7 +68,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/postUserImage" />
 
             <ImageView
-                android:id="@+id/postUpvoteBtn"
+                android:id="@+id/postLikeBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -76,22 +78,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/postName"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/action_upvote_gray" />
-
-            <ImageView
-                android:id="@+id/postDownvoteBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/postUpvoteCount"
-                app:layout_constraintTop_toBottomOf="@+id/postName"
-                app:srcCompat="@drawable/action_downvote_gray" />
+                app:srcCompat="@drawable/action_like_gray" />
 
             <TextView
-                android:id="@+id/postUpvoteCount"
+                android:id="@+id/postLikeCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -99,19 +89,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="123"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/postUpvoteBtn"
-                app:layout_constraintTop_toBottomOf="@+id/postName" />
-
-            <TextView
-                android:id="@+id/postDownvoteCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="123"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/postDownvoteBtn"
+                app:layout_constraintStart_toEndOf="@+id/postLikeBtn"
                 app:layout_constraintTop_toBottomOf="@+id/postName" />
 
         </android.support.constraint.ConstraintLayout>

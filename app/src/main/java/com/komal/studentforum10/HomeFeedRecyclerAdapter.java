@@ -102,18 +102,18 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             holder.setPostDate(dateString);
 
             //Get UpVote Counts
-            firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                     if(!queryDocumentSnapshots.isEmpty())
                     {
                         int count = queryDocumentSnapshots.size();
 
-                        holder.updateUpvotesCount(count);
+                        holder.updateLikeCount(count);
 
                     } else {
 
-                        holder.updateUpvotesCount(0);
+                        holder.updateLikeCount(0);
 
                     }
                 }
@@ -121,18 +121,18 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
             //Get UpVote
 
-            firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
                     if (documentSnapshot.exists()){
-                        holder.postUpvoteBtn.setImageDrawable(context.getDrawable(R.drawable.action_upvote_accent));
-                        holder.postUpvoteCount.setTextColor(ContextCompat.getColor(context, R.color.upVote_Accent));
+                        holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.action_like_accent));
+                        holder.postLikeCount.setTextColor(ContextCompat.getColor(context, R.color.Like_Accent));
                     }
                     else
                     {
-                        holder.postUpvoteBtn.setImageDrawable(context.getDrawable(R.drawable.action_upvote_gray));
-                        holder.postUpvoteCount.setTextColor(ContextCompat.getColor(context, R.color.upVote_Gray));
+                        holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.action_like_gray));
+                        holder.postLikeCount.setTextColor(ContextCompat.getColor(context, R.color.Like_Gray));
                     }
 
                 }
@@ -140,24 +140,24 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
 
             //UpVote Feature
-            holder.postUpvoteBtn.setOnClickListener(new View.OnClickListener() {
+            holder.postLikeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
                             if (!task.getResult().exists()){
-                                        Map<String, Object> upvotesMap = new HashMap<>();
-                                        upvotesMap.put("timestamp", FieldValue.serverTimestamp());
+                                        Map<String, Object> likesMap = new HashMap<>();
+                                        likesMap.put("timestamp", FieldValue.serverTimestamp());
 
-                                        firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").document(currentUserId).set(upvotesMap);
+                                        firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).set(likesMap);
 
                             }
                             else {
 
-                                firebaseFirestore.collection("Posts/" + homeFeedId + "/Upvotes").document(currentUserId).delete();
+                                firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).delete();
 
                             }
                         }
@@ -165,72 +165,6 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
                 }
             });
-
-            //DownVotes
-
-            //Get Downvote Counts
-            firebaseFirestore.collection("Posts/" + homeFeedId + "/Downvotes").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                    if(!queryDocumentSnapshots.isEmpty())
-                    {
-                        int count = queryDocumentSnapshots.size();
-
-                        holder.updateDownvotesCount(count);
-
-                    } else {
-
-                        holder.updateDownvotesCount(0);
-
-                    }
-                }
-            });
-
-            //Get Downvote
-
-            firebaseFirestore.collection("Posts/" + homeFeedId + "/Downvotes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-
-                    if (documentSnapshot.exists()){
-                        holder.postDownvoteBtn.setImageDrawable(context.getDrawable(R.drawable.action_downvote_accent));
-                        holder.postDownvoteCount.setTextColor(ContextCompat.getColor(context, R.color.downVote_Accent));
-                    }
-                    else
-                    {
-                        holder.postDownvoteBtn.setImageDrawable(context.getDrawable(R.drawable.action_downvote_gray));
-                        holder.postDownvoteCount.setTextColor(ContextCompat.getColor(context, R.color.downVote_Gray));
-                    }
-
-                }
-            });
-
-
-            //Downvote Feature
-            holder.postDownvoteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    firebaseFirestore.collection("Posts/" + homeFeedId + "/Downvotes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                            if (!task.getResult().exists()){
-                                    Map<String, Object> downvotesMap = new HashMap<>();
-                                    downvotesMap.put("timestamp", FieldValue.serverTimestamp());
-
-                                    firebaseFirestore.collection("Posts/" + homeFeedId + "/Downvotes").document(currentUserId).set(downvotesMap);
-                            }
-                            else {
-                                firebaseFirestore.collection("Posts/" + homeFeedId + "/Downvotes").document(currentUserId).delete();
-                            }
-                        }
-                    });
-
-                }
-            });
-
-
 
         } catch (Exception e) {
 
@@ -252,20 +186,15 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
         private TextView postUsername;
         private CircleImageView postUserimage;
         private TextView postDate;
-        private ImageView postUpvoteBtn;
-        private TextView postUpvoteCount;
-        private ImageView postDownvoteBtn;
-        private TextView postDownvoteCount;
+        private ImageView postLikeBtn;
+        private TextView postLikeCount;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
 
-            postUpvoteBtn = mView.findViewById(R.id.postUpvoteBtn);
-            postUpvoteCount = mView.findViewById(R.id.postUpvoteCount);
-
-            postDownvoteBtn = mView.findViewById(R.id.postDownvoteBtn);
-            postDownvoteCount = mView.findViewById(R.id.postDownvoteCount);
+            postLikeBtn = mView.findViewById(R.id.postLikeBtn);
+            postLikeCount = mView.findViewById(R.id.postLikeCount);
 
         }
 
@@ -300,12 +229,8 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
         }
 
-        public void updateUpvotesCount (int count) {
-            postUpvoteCount.setText(count + " "); //Space so no error while converting to string
-        }
-
-        public void updateDownvotesCount (int count) {
-            postDownvoteCount.setText(count + " "); //Space so no error while converting to string
+        public void updateLikeCount (int count) {
+            postLikeCount.setText(count + " "); //Space so no error while converting to string
         }
 
     }
