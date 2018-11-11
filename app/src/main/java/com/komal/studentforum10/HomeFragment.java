@@ -123,16 +123,6 @@ public class HomeFragment extends Fragment {
 
                     }
 
-                                }
-                              homeFeedRecyclerAdapter.notifyDataSetChanged();
-
-                            }
-
-                        }
-
-                        isFirstPageFirstLoaded = false;
-
-                    }
                 }
             });
         }
