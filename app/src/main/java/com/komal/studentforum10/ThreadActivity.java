@@ -34,7 +34,7 @@ public class ThreadActivity extends AppCompatActivity {
     private TextView threadName;
     private TextView threadSubscribers;
     private Button subscribeBtn;
-    private Button subscribedBtn;
+    private Button unsubscribeBtn;
 
     private RecyclerView threadPageView;
     private List<ThreadPage> threadPageList;
@@ -69,7 +69,7 @@ public class ThreadActivity extends AppCompatActivity {
         threadName.setText(CategoryId);
         threadSubscribers = findViewById(R.id.threadSubscribers);
         subscribeBtn = findViewById(R.id.subsrcibeBtn);
-        subscribedBtn = findViewById(R.id.subsrcibedBtn);
+        unsubscribeBtn = findViewById(R.id.unsubscribeBtn);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -82,6 +82,27 @@ public class ThreadActivity extends AppCompatActivity {
         threadPageRecyclerAdapter = new ThreadPageRecyclerAdapter(threadPageList);
         threadPageView.setLayoutManager(new LinearLayoutManager(this));
         threadPageView.setAdapter(threadPageRecyclerAdapter);
+
+        firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
+                .document(user_id)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                        if (!task.getResult().exists()) {
+
+                            subscribeBtn.setVisibility(View.VISIBLE);
+
+                        } else {
+
+                            unsubscribeBtn.setVisibility(View.VISIBLE);
+
+                        }
+
+                    }
+                });
+
 
         //for loading the posts
         if (firebaseAuth.getCurrentUser() != null) {
@@ -101,7 +122,7 @@ public class ThreadActivity extends AppCompatActivity {
                 }
             });
 
-            //for getting the number of subsrcibers
+            //for getting the number of subscribers
             firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -113,10 +134,12 @@ public class ThreadActivity extends AppCompatActivity {
 
                             }
 
+                            //setting the subscribers count
                             threadSubscribers.setText(subscribersCount + " subscribers");
 
                         }
                     });
+
 
             Query firstQuery = firebaseFirestore.collection("Threads")
                     .document(CategoryId)
@@ -129,35 +152,39 @@ public class ThreadActivity extends AppCompatActivity {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                    if (isFirstPageFirstLoaded) {
+                    if (!queryDocumentSnapshots.isEmpty()) {
 
-                        // Get the last visible document
-                        lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                        if (isFirstPageFirstLoaded) {
 
-                    }
-
-                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
-
-                            ThreadPage threadPage = doc.getDocument().toObject(ThreadPage.class);
-                            if (isFirstPageFirstLoaded) {
-
-                                threadPageList.add(threadPage);
-
-                            } else {
-
-                                threadPageList.add(0, threadPage);
-
-                            }
-
-                            threadPageRecyclerAdapter.notifyDataSetChanged();
+                            // Get the last visible document
+                            lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 
                         }
 
-                    }
+                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
-                    isFirstPageFirstLoaded = false;
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
+
+                                ThreadPage threadPage = doc.getDocument().toObject(ThreadPage.class);
+                                if (isFirstPageFirstLoaded) {
+
+                                    threadPageList.add(threadPage);
+
+                                } else {
+
+                                    threadPageList.add(0, threadPage);
+
+                                }
+
+                                threadPageRecyclerAdapter.notifyDataSetChanged();
+
+                            }
+
+                        }
+
+                        isFirstPageFirstLoaded = false;
+
+                    }
 
                 }
             });
@@ -169,39 +196,35 @@ public class ThreadActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     subscribeBtn.setVisibility(View.INVISIBLE);
-                    subscribedBtn.setVisibility(View.VISIBLE);
+                    unsubscribeBtn.setVisibility(View.VISIBLE);
 
                     firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
                             .document(user_id)
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                            if (!task.getResult().exists()) {
+                                    if (!task.getResult().exists()) {
 
-                                Map<String, Object> subscribersMap = new HashMap<>();
-                                subscribersMap.put("timestamp", FieldValue.serverTimestamp());
+                                        Map<String, Object> subscribersMap = new HashMap<>();
+                                        subscribersMap.put("timestamp", FieldValue.serverTimestamp());
 
-                                firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id).set(subscribersMap);
+                                        firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id).set(subscribersMap);
 
-                            } else {
-
-                                firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id).delete();
-
-                            }
-                        }
-                    });
+                                    }
+                                }
+                            });
 
                 }
             });
 
             //unsubscribing - not implemented yet
-            subscribedBtn.setOnClickListener(new View.OnClickListener() {
+            unsubscribeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    subscribedBtn.setVisibility(View.INVISIBLE);
+                    unsubscribeBtn.setVisibility(View.INVISIBLE);
                     subscribeBtn.setVisibility(View.VISIBLE);
 
                     firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
@@ -211,9 +234,11 @@ public class ThreadActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                                    if (task.getResult().exists()){
+                                    if (task.getResult().exists()) {
 
                                         firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id).delete();
+                                        subscribersCount--;
+                                        threadSubscribers.setText(subscribersCount);
 
                                     }
                                 }
