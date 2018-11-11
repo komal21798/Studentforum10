@@ -101,7 +101,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             String dateString = DateFormat.format("dd/MM/yyyy", new Date(millisecond)).toString();
             holder.setPostDate(dateString);
 
-            //Get UpVote Counts
+            //Get Likes Counts
             firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -119,7 +119,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
                 }
             });
 
-            //Get UpVote
+            //Get Likes
 
             firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
@@ -139,7 +139,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             });
 
 
-            //UpVote Feature
+            //Likes Feature
             holder.postLikeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
