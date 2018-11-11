@@ -97,18 +97,31 @@ public class HomeFragment extends Fragment {
                             lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 
                         }
+
                         for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
                             if (doc.getType() == DocumentChange.Type.ADDED) {
 
                                 String homeFeedId = doc.getDocument().getId();
                                 HomeFeed homeFeed = doc.getDocument().toObject(HomeFeed.class).withId(homeFeedId);
+
                                 if (isFirstPageFirstLoaded) {
                                     homeFeedList.add(homeFeed);
 
                                 } else {
 
                                     homeFeedList.add(0, homeFeed);
+
+                                }
+                                homeFeedRecyclerAdapter.notifyDataSetChanged();
+
+                            }
+
+                        }
+
+                        isFirstPageFirstLoaded = false;
+
+                    }
 
                                 }
                               homeFeedRecyclerAdapter.notifyDataSetChanged();
