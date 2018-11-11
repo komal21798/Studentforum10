@@ -3,6 +3,7 @@ package com.komal.studentforum10;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +47,7 @@ public class CategoriesFeedRecyclerAdapter extends RecyclerView.Adapter<Categori
         final String threadNameData = categoriesFeedList.get(position).getThread_name();
         holder.setThreadName(threadNameData);
 
-        holder.threadArrowBtn.setOnClickListener(new View.OnClickListener() {
+        holder.threadCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -68,12 +69,14 @@ public class CategoriesFeedRecyclerAdapter extends RecyclerView.Adapter<Categori
         private View mView;
         private TextView threadName;
         private ImageView threadArrowBtn;
+        private CardView threadCardView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
 
             threadArrowBtn = mView.findViewById(R.id.threadArrow);
+            threadCardView = mView.findViewById(R.id.threadCardView);
         }
 
         public void setThreadName(String threadNameText) {
