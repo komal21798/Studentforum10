@@ -92,8 +92,7 @@ public class ExploreFragment extends Fragment {
 
                         if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                            String exploreFeedId = doc.getDocument().getId();
-                            ExploreFeed exploreFeed = doc.getDocument().toObject(ExploreFeed.class).withId(exploreFeedId);
+                            ExploreFeed exploreFeed = doc.getDocument().toObject(ExploreFeed.class);
                             exploreFeedList.add(exploreFeed);
 
                             exploreFeedRecyclerAdapter.notifyDataSetChanged();
@@ -129,8 +128,7 @@ public class ExploreFragment extends Fragment {
 
                         if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                            String exploreFeedId = doc.getDocument().getId();
-                            ExploreFeed exploreFeed = doc.getDocument().toObject(ExploreFeed.class).withId(exploreFeedId);
+                            ExploreFeed exploreFeed = doc.getDocument().toObject(ExploreFeed.class);
                             exploreFeedList.add(exploreFeed);
 
                             exploreFeedRecyclerAdapter.notifyDataSetChanged();

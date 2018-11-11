@@ -37,11 +37,9 @@
                 android:id="@+id/threadArrow"
                 android:layout_width="54dp"
                 android:layout_height="43dp"
-                android:layout_marginStart="320dp"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_keyboard_arrow_right_black_24dp" />
         </android.support.constraint.ConstraintLayout>

@@ -4,13 +4,14 @@ import android.support.annotation.NonNull;
 
 import com.google.firebase.firestore.Exclude;
 
-public class ExploreFeedId {
+public class ThreadPageId {
+
 
     @Exclude
-    public String exploreFeedId;
+    public String threadPageId;
 
-    public <T extends ExploreFeedId> T withId(@NonNull final String id) {
-        this.exploreFeedId = id;
+    public <T extends ThreadPageId> T withId(@NonNull final String id) {
+        this.threadPageId = id;
         return (T) this;
     }
 
