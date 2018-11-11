@@ -8,4 +8,7 @@
 
     <color name="upVote_Gray">#747474</color>
     <color name="upVote_Accent">#f9aa33</color>
+
+    <color name="downVote_Gray">#747474</color>
+    <color name="downVote_Accent">#f9aa33</color>
 </resources>

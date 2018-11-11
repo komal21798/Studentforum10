@@ -78,6 +78,18 @@
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/action_upvote_gray" />
 
+            <ImageView
+                android:id="@+id/postDownvoteBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/postUpvoteCount"
+                app:layout_constraintTop_toBottomOf="@+id/postName"
+                app:srcCompat="@drawable/action_downvote_gray" />
+
             <TextView
                 android:id="@+id/postUpvoteCount"
                 android:layout_width="wrap_content"
@@ -88,6 +100,18 @@
                 android:text="123"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/postUpvoteBtn"
+                app:layout_constraintTop_toBottomOf="@+id/postName" />
+
+            <TextView
+                android:id="@+id/postDownvoteCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="123"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/postDownvoteBtn"
                 app:layout_constraintTop_toBottomOf="@+id/postName" />
 
         </android.support.constraint.ConstraintLayout>
