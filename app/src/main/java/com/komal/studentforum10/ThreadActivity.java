@@ -84,8 +84,8 @@ public class ThreadActivity extends AppCompatActivity {
                     for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
                         if (doc.getType() == DocumentChange.Type.ADDED) {
-
-                            ThreadPage threadPage = doc.getDocument().toObject(ThreadPage.class);
+                            String threadPageId = doc.getDocument().getId();
+                            ThreadPage threadPage = doc.getDocument().toObject(ThreadPage.class).withId(threadPageId);
                             threadPageList.add(threadPage);
 
                             threadPageRecyclerAdapter.notifyDataSetChanged();
@@ -118,8 +118,8 @@ public class ThreadActivity extends AppCompatActivity {
                     for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
                         if (doc.getType() == DocumentChange.Type.ADDED) {
-
-                            ThreadPage threadPage = doc.getDocument().toObject(ThreadPage.class);
+                            String threadPageId = doc.getDocument().getId();
+                            ThreadPage threadPage = doc.getDocument().toObject(ThreadPage.class).withId(threadPageId);
                             threadPageList.add(threadPage);
 
                             threadPageRecyclerAdapter.notifyDataSetChanged();
