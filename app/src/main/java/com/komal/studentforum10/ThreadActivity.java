@@ -5,8 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -175,7 +177,6 @@ public class ThreadActivity extends AppCompatActivity {
                     firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
                             .document(user_id).set(likesMap);
 
-                    firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id).set(likesMap);
 
                 }
             });
@@ -187,7 +188,8 @@ public class ThreadActivity extends AppCompatActivity {
 
                     unsubscribeBtn.setVisibility(View.INVISIBLE);
 
-                    firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id).delete();
+                    firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
+                            .document(user_id).delete();
 
                 }
             });
@@ -217,7 +219,8 @@ public class ThreadActivity extends AppCompatActivity {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
 
                                 String threadPageId = doc.getDocument().getId();
-                                ThreadPage threadPage = doc.getDocument().toObject(ThreadPage.class).withId(threadPageId);
+                                ThreadPage threadPage = doc.getDocument()
+                                        .toObject(ThreadPage.class).withId(threadPageId);
                                 if (isFirstPageFirstLoaded) {
 
                                     threadPageList.add(threadPage);
@@ -268,5 +271,12 @@ public class ThreadActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.popupactions, popup.getMenu());
+        popup.show();
     }
 }

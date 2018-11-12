@@ -71,7 +71,8 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
         String user_id = homeFeedList.get(position).getUser_id();
 
-        firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Users").document(user_id).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
