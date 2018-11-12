@@ -215,8 +215,8 @@ public class StudentForum extends AppCompatActivity {
     public AlertDialog.Builder buildDialog(Context c) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        builder.setTitle("No Internet Connection");
-        builder.setMessage("You need to have Mobile Data or wifi to access this. Press ok to Exit");
+        builder.setTitle("No internet connection");
+        builder.setMessage("Please check your internet connection. Click OK to exit");
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 
