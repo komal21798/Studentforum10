@@ -133,12 +133,64 @@ public class ThreadActivity extends AppCompatActivity {
 
                                 subscribersCount = queryDocumentSnapshots.size();
 
+                            } else {
+
+                                subscribersCount = 0;
+
                             }
 
                             //setting the subscribers count
                             threadSubscribers.setText(subscribersCount + " subscribers");
                         }
                     });
+
+            //showing the subscribe or unsubscribe button
+            firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id)
+                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                            if(documentSnapshot.exists()) {
+
+                                unsubscribeBtn.setVisibility(View.VISIBLE);
+
+                            } else {
+
+                                subscribeBtn.setVisibility(View.VISIBLE);
+
+                            }
+                        }
+                    });
+
+            //subscribing
+            subscribeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    subscribeBtn.setVisibility(View.INVISIBLE);
+
+                    Map<String, Object> likesMap = new HashMap<>();
+                    likesMap.put("timestamp", FieldValue.serverTimestamp());
+
+                    firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
+                            .document(user_id).set(likesMap);
+
+                    firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id).set(likesMap);
+
+                }
+            });
+
+            //unsubscribing
+            unsubscribeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    unsubscribeBtn.setVisibility(View.INVISIBLE);
+
+                    firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id).delete();
+
+                }
+            });
 
             Query firstQuery = firebaseFirestore.collection("Threads")
                     .document(CategoryId)
@@ -186,7 +238,7 @@ public class ThreadActivity extends AppCompatActivity {
             });
 
 
-            //jugaad - subscribing to a thread - not implemented yet
+            /*//jugaad - subscribing to a thread - not implemented yet
             subscribeBtn.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -243,7 +295,7 @@ public class ThreadActivity extends AppCompatActivity {
                                 }
                             });
                 }
-            });
+            });*/
         }
     }
 
