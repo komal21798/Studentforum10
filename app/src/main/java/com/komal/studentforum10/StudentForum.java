@@ -80,6 +80,8 @@ public class StudentForum extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        firebaseUser = mAuth.getCurrentUser();
+
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavView);
         BottomNavViewHelper.disableShiftMode(bottomNavigationView);
 
@@ -105,6 +107,14 @@ public class StudentForum extends AppCompatActivity {
         if(!isConnected(StudentForum.this)) {
 
             buildDialog(StudentForum.this).show();
+
+        }
+
+        //to check if email is verified
+        if(!firebaseUser.isEmailVerified()) {
+
+            Toast.makeText(this, "Please verify your email to login.", Toast.LENGTH_LONG).show();
+            goToLogin();
 
         }
 
@@ -158,8 +168,6 @@ public class StudentForum extends AppCompatActivity {
     }
 
     public void logout(){
-
-
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(StudentForum.this);
         builder.setMessage(" Are you sure you want to logout ?");

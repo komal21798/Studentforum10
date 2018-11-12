@@ -108,7 +108,7 @@ public class NewPostFragment extends Fragment {
                 String post_name = newPostName.getText().toString();
                 String post_desc = newPostDesc.getText().toString();
 
-                if(!TextUtils.isEmpty(post_desc) && !TextUtils.isEmpty(post_name) /*&& !TextUtils.isEmpty(post_thread)*/) {
+                if(!TextUtils.isEmpty(post_desc) && !TextUtils.isEmpty(post_name) && !TextUtils.isEmpty(post_thread)) {
 
                     newPostProgress.setVisibility(View.VISIBLE);
 

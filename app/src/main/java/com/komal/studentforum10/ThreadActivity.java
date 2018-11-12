@@ -146,7 +146,7 @@ public class ThreadActivity extends AppCompatActivity {
 
             //showing the subscribe or unsubscribe button
             firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id)
-                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    .addSnapshotListener(ThreadActivity.this, new EventListener<DocumentSnapshot>() {
                         @Override
                         public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
@@ -198,7 +198,7 @@ public class ThreadActivity extends AppCompatActivity {
                     .orderBy("timestamp", Query.Direction.DESCENDING)
                     .limit(15);
 
-            firstQuery.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+            firstQuery.addSnapshotListener(ThreadActivity.this, new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
@@ -236,66 +236,6 @@ public class ThreadActivity extends AppCompatActivity {
                     }
                 }
             });
-
-
-            /*//jugaad - subscribing to a thread - not implemented yet
-            subscribeBtn.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-
-                    subscribeBtn.setVisibility(View.INVISIBLE);
-                    unsubscribeBtn.setVisibility(View.VISIBLE);
-
-                    firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
-                            .document(user_id)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                                    if (!task.getResult().exists()) {
-
-                                        Map<String, Object> subscribersMap = new HashMap<>();
-                                        subscribersMap.put("timestamp", FieldValue.serverTimestamp());
-                                        firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id).set(subscribersMap);
-
-                                    }
-                                }
-                            });
-                }
-            });
-
-
-            //unsubscribing - not implemented yet
-            unsubscribeBtn.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-
-                    unsubscribeBtn.setVisibility(View.INVISIBLE);
-                    subscribeBtn.setVisibility(View.VISIBLE);
-
-                    firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
-                            .document(user_id)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                                    if (task.getResult().exists()) {
-
-                                        firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id).delete();
-                                        subscribersCount--;
-                                        threadSubscribers.setText(subscribersCount);
-
-                                    }
-                                }
-                            });
-                }
-            });*/
         }
     }
 
