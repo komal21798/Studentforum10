@@ -40,6 +40,8 @@ public class ExploreFragment extends Fragment {
 
     private DocumentSnapshot lastVisible;
 
+    private Boolean isFirstPageFirstLoaded = true;
+
     public ExploreFragment() {
         // Required empty public constructor
     }
@@ -85,18 +87,34 @@ public class ExploreFragment extends Fragment {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                    // Get the last visible document
-                    lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() -1);
+                    if(!queryDocumentSnapshots.isEmpty()) {
 
-                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                        if(isFirstPageFirstLoaded) {
 
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                            // Get the last visible document
+                            lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 
-                            String exploreFeedId = doc.getDocument().getId();
-                            ExploreFeed exploreFeed = doc.getDocument().toObject(ExploreFeed.class).withId(exploreFeedId);
-                            exploreFeedList.add(exploreFeed);
+                        }
 
-                            exploreFeedRecyclerAdapter.notifyDataSetChanged();
+                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
+
+                                String exploreFeedId = doc.getDocument().getId();
+                                ExploreFeed exploreFeed = doc.getDocument().toObject(ExploreFeed.class).withId(exploreFeedId);
+
+                                if (isFirstPageFirstLoaded) {
+                                    exploreFeedList.add(exploreFeed);
+
+                                } else {
+
+                                    exploreFeedList.add(0, exploreFeed);
+
+                                }
+
+                                exploreFeedRecyclerAdapter.notifyDataSetChanged();
+
+                            }
 
                         }
 

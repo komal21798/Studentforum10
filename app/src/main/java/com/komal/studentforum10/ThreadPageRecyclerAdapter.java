@@ -75,6 +75,33 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
         firebaseFirestore.collection("Users").document(user_id).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                        String postUsername;
+                        String postUserimage;
+                        if (task.isSuccessful()) {
+
+                            postUsername = task.getResult().getString("username");
+                            postUserimage = task.getResult().getString("profile_image");
+
+                            holder.setUsername(postUsername);
+                            holder.setUserimage(postUserimage);
+
+                        } else {
+
+                            String error = task.getException().getMessage();
+                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }
+                });
+
+        /*String user_id = threadPageList.get(position).getUser_id();
+
+        firebaseFirestore.collection("Users").document(user_id).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
@@ -96,7 +123,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
                 }
 
             }
-        });
+        });*/
 
         try {
 
