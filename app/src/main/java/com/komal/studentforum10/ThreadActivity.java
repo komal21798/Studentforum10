@@ -171,12 +171,14 @@ public class ThreadActivity extends AppCompatActivity {
 
                     subscribeBtn.setVisibility(View.INVISIBLE);
 
-                    Map<String, Object> likesMap = new HashMap<>();
-                    likesMap.put("timestamp", FieldValue.serverTimestamp());
+                    Map<String, Object> subscribeMap = new HashMap<>();
+                    subscribeMap.put("timestamp", FieldValue.serverTimestamp());
 
                     firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
-                            .document(user_id).set(likesMap);
+                            .document(user_id).set(subscribeMap);
 
+                    firebaseFirestore.collection("Users/" + user_id + "/Subs")
+                            .document(CategoryId).set(subscribeMap);
 
                 }
             });
@@ -190,6 +192,9 @@ public class ThreadActivity extends AppCompatActivity {
 
                     firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
                             .document(user_id).delete();
+
+                    firebaseFirestore.collection("Users/" + user_id + "/Subs")
+                            .document(CategoryId).delete();
 
                 }
             });

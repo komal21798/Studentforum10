@@ -42,6 +42,10 @@ public class HomeFragment extends Fragment {
     private DocumentSnapshot lastVisible;
     private Boolean isFirstPageFirstLoaded = true;
 
+    private String user_id;
+
+    private ArrayList<String> subscribedCategories;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -64,6 +68,10 @@ public class HomeFragment extends Fragment {
         homeFeedView.setLayoutManager(new LinearLayoutManager(getActivity()));
         homeFeedView.setAdapter(homeFeedRecyclerAdapter);
 
+        subscribedCategories = new ArrayList<>();
+
+        user_id = firebaseAuth.getCurrentUser().getUid();
+
         if (firebaseAuth.getCurrentUser() != null) {
 
             homeFeedView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -78,6 +86,26 @@ public class HomeFragment extends Fragment {
                     }
                 }
             });
+
+            /*firebaseFirestore.collection("Users/" + user_id + "Subs")
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                            if(!queryDocumentSnapshots.isEmpty()) {
+
+                                for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+
+                                    if (doc.getType() == DocumentChange.Type.ADDED) {
+
+                                        String categoryId = doc.getDocument().getId();
+                                        subscribedCategories.add(categoryId);
+
+                                    }
+                                }
+                            }
+                        }
+                    });*/
 
             //To order the posts according to the Timestamp added a first Query and added a limit to load 15 posts at a time (Changeable)
             Query firstQuery = firebaseFirestore.collection("Posts")
