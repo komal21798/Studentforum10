@@ -11,6 +11,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -32,7 +34,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class NewPostFragment extends Fragment {
 
-    private EditText newPostThread;
+    public String[] Thready= new String[]{
+            "checking","checking2","Announcements","Events","Festivals","Projects","StanLee","Clubs"
+    };
+
+    private AutoCompleteTextView newPostThread;
     private EditText newPostName;
     private EditText newPostDesc;
     private Button newPostBtn;
@@ -41,7 +47,7 @@ public class NewPostFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private StorageReference storageReference;
     private FirebaseFirestore firebaseFirestore;
-
+    private ArrayAdapter<String> adapter;
     private String user_id;
 
 
@@ -78,16 +84,25 @@ public class NewPostFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+
+
+
+
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         // Inflate the layout for this fragment
         View v;
         v = inflater.inflate(R.layout.fragment_new_post, container, false);
 
-        newPostThread = (EditText) v.findViewById(R.id.newPostThread);
+        newPostThread = (AutoCompleteTextView) v.findViewById(R.id.newPostThread);
         newPostName = (EditText) v.findViewById(R.id.newPostName);
         newPostDesc = (EditText) v.findViewById(R.id.newPostDesc);
         newPostBtn = (Button) v.findViewById(R.id.newPostBtn);
@@ -97,7 +112,18 @@ public class NewPostFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
 
+
+
+
         user_id = firebaseAuth.getCurrentUser().getUid();
+
+        adapter= new ArrayAdapter<String>(getActivity(),android.R.layout.select_dialog_item, Thready);
+        newPostThread.setThreshold(1);
+        newPostThread.setAdapter(adapter);
+
+
+
+
 
         //only adds text post and not images, gifs
         newPostBtn.setOnClickListener(new View.OnClickListener() {
@@ -186,4 +212,6 @@ public class NewPostFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

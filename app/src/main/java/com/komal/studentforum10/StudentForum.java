@@ -18,6 +18,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -26,6 +28,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class StudentForum extends AppCompatActivity {
+
+
 
     private DrawerLayout dl;
     private ActionBarDrawerToggle abdt;
@@ -158,6 +162,8 @@ public class StudentForum extends AppCompatActivity {
             });
 
         }
+
+
 
 
     }
