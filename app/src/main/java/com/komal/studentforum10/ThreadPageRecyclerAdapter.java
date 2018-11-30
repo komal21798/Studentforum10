@@ -231,9 +231,19 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
             @Override
             public void onClick(View v) {
 
-                Intent commentsIntent = new Intent(context, CommentsActivity.class);
-                commentsIntent.putExtra("threadPageId", threadPageId);
-                context.startActivity(commentsIntent);
+                if(postThread.equals("Register")) {
+
+                    Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
+                    registerIntent.putExtra("threadPageId", threadPageId);
+                    context.startActivity(registerIntent);
+
+                } else {
+
+                    Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                    commentsIntent.putExtra("threadPageId", threadPageId);
+                    context.startActivity(commentsIntent);
+
+                }
 
             }
         });

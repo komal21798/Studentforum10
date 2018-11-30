@@ -55,7 +55,7 @@ public class CategoriesFeedRecyclerAdapter extends RecyclerView.Adapter<Categori
 
                 Intent intent = new Intent(context, ThreadActivity.class);
                 intent.putExtra("CategoryId", CategoryId);
-                intent.putExtra("ThreadDesc", threadDesc);
+                intent.putExtra("CategoryDesc", threadDesc);
                 context.startActivity(intent);
 
             }

@@ -36,7 +36,8 @@
         <activity android:name=".PasswordResetActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ThreadActivity" />
-        <activity android:name=".CommentsActivity"></activity>
+        <activity android:name=".CommentsActivity" />
+        <activity android:name=".EventsRegistrationActivity"></activity>
     </application>
 
 </manifest>
