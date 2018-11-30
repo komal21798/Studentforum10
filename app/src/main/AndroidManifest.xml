@@ -35,7 +35,8 @@
             android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".PasswordResetActivity" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".ThreadActivity"></activity>
+        <activity android:name=".ThreadActivity" />
+        <activity android:name=".CommentsActivity"></activity>
     </application>
 
 </manifest>

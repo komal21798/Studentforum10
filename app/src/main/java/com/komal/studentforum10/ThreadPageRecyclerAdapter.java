@@ -1,13 +1,16 @@
 package com.komal.studentforum10;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,8 +68,8 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
         holder.setIsRecyclable(false);
 
         final String threadPageId = threadPageList.get(position).threadPageId;
-
         final String currentUserId = firebaseAuth.getCurrentUser().getUid();
+        final String postThread = threadPageList.get(position).getPost_thread();
 
         String postName = threadPageList.get(position).getPost_name();
         holder.setPostName(postName);
@@ -78,8 +81,56 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
+                        if(task.isSuccessful()) {
+
+                            String username = task.getResult().getString("username");
+                            String userImage = task.getResult().getString("profile_image");
+
+                            holder.setUserData(username, userImage);
+
+                        } else {
+
+                            Intent newIntent = new Intent(context, StudentForum.class);
+                            context.startActivity(newIntent);
+
+                        }
+
+                    }
+                });
+
+        /*//User Data will be retrieved here...
+        firebaseFirestore.collection("Users").document(user_id).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if(task.isSuccessful()){
+
+                    String userName = task.getResult().getString("username");
+                    String userImage = task.getResult().getString("profile_image");
+
+                    holder.setUsername(userName);
+                    holder.setUserimage(userImage);
+
+
+                } else {
+
+                    Intent newIntent = new Intent(context, StudentForum.class);
+                    context.startActivity(newIntent);
+
+                }
+
+            }
+        });*/
+
+        /*firebaseFirestore.collection("Users").document(user_id).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
                         String postUsername;
                         String postUserimage;
+
                         if (task.isSuccessful()) {
 
                             postUsername = task.getResult().getString("username");
@@ -97,34 +148,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
                     }
                 });
-
-        /*String user_id = threadPageList.get(position).getUser_id();
-
-        firebaseFirestore.collection("Users").document(user_id).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                String postUsername;
-                String postUserimage;
-                if (task.isSuccessful()) {
-
-                    postUsername = task.getResult().getString("username");
-                    postUserimage = task.getResult().getString("profile_image");
-
-                    holder.setUsername(postUsername);
-                    holder.setUserimage(postUserimage);
-
-                } else {
-
-                    String error = task.getException().getMessage();
-                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
-
-                }
-
-            }
-        });*/
-
+*/
         try {
 
             long millisecond = threadPageList.get(position).getTimestamp().getTime();
@@ -138,7 +162,8 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
         }
 
         //Get Likes Counts
-        firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (!queryDocumentSnapshots.isEmpty()) {
@@ -155,8 +180,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
         });
 
         //Get Likes
-
-        firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
@@ -177,19 +201,23 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
             @Override
             public void onClick(View view) {
 
-                firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
                         if (!task.getResult().exists()) {
+
                             Map<String, Object> likesMap = new HashMap<>();
                             likesMap.put("timestamp", FieldValue.serverTimestamp());
 
+                            firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
                             firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
 
                         } else {
 
+                            firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
                             firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
+
 
                         }
                     }
@@ -198,6 +226,17 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
             }
         });
 
+        //going to comments activity
+        holder.postCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                commentsIntent.putExtra("threadPageId", threadPageId);
+                context.startActivity(commentsIntent);
+
+            }
+        });
 
     }
 
@@ -215,6 +254,8 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
         private TextView postDate;
         private ImageView postLikeBtn;
         private TextView postLikeCount;
+        private ImageButton postDelete;
+        private CardView postCardView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -223,6 +264,10 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
             postLikeBtn = mView.findViewById(R.id.postLikeBtn);
             postLikeCount = mView.findViewById(R.id.postLikeCount);
+
+            postDelete = mView.findViewById(R.id.delete_post);
+
+            postCardView = mView.findViewById(R.id.postCardView);
         }
 
         public void setPostName(String postText) {
@@ -247,6 +292,21 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
             placeholderOption.placeholder(R.mipmap.ic_launcher_foreground);
 
             Glide.with(context).applyDefaultRequestOptions(placeholderOption).load(postUserimageText).into(postUserimage);
+
+        }
+
+        public void setUserData(String name, String image){
+
+            postUsername = mView.findViewById(R.id.postUsername);
+            postUserimage = mView.findViewById(R.id.postUserImage);
+
+            postUsername.setText(name);
+
+            RequestOptions placeholderOption = new RequestOptions();
+            placeholderOption.placeholder(R.drawable.ic_launcher_foreground);
+
+            Glide.with(context).applyDefaultRequestOptions(placeholderOption).load(image).into(postUserimage);
+
         }
 
         public void setPostDate(String postDateText) {

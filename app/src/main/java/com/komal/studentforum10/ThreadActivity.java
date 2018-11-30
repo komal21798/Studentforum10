@@ -51,7 +51,7 @@ public class ThreadActivity extends AppCompatActivity {
 
     private Boolean isFirstPageFirstLoaded = true;
 
-    private String CategoryId;
+    public static String CategoryId;
     private String user_id;
     private int subscribersCount;
 

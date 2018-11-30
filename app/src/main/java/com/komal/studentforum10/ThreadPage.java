@@ -8,6 +8,24 @@ public class ThreadPage extends ThreadPageId {
     public String post_desc;
     public String user_id;
     public Date timestamp;
+    public String post_thread;
+
+    public ThreadPage(String post_name, String post_desc, String user_id, Date timestamp, String post_thread) {
+        this.post_name = post_name;
+        this.post_desc = post_desc;
+        this.user_id = user_id;
+        this.timestamp = timestamp;
+        this.post_thread = post_thread;
+    }
+
+    public String getPost_thread() {
+        return post_thread;
+    }
+
+    public void setPost_thread(String post_thread) {
+        this.post_thread = post_thread;
+    }
+
 
     public Date getTimestamp() {
         return timestamp;
@@ -19,13 +37,6 @@ public class ThreadPage extends ThreadPageId {
 
     public ThreadPage(){
 
-    }
-
-    public ThreadPage(String post_name, String post_desc, String user_id, Date timestamp) {
-        this.post_name = post_name;
-        this.post_desc = post_desc;
-        this.user_id = user_id;
-        this.timestamp = timestamp;
     }
 
     public String getPost_name() {

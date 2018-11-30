@@ -73,28 +73,29 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
         firebaseFirestore.collection("Users").document(user_id).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                String postUsername;
-                String postUserimage;
-                if (task.isSuccessful()) {
+                        String postUsername;
+                        String postUserimage;
 
-                    postUsername = task.getResult().getString("username");
-                    postUserimage = task.getResult().getString("profile_image");
+                        if (task.isSuccessful()) {
 
-                    holder.setUsername(postUsername);
-                    holder.setUserimage(postUserimage);
+                            postUsername = task.getResult().getString("username");
+                            postUserimage = task.getResult().getString("profile_image");
 
-                } else {
+                            holder.setUsername(postUsername);
+                            holder.setUserimage(postUserimage);
 
-                    String error = task.getException().getMessage();
-                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                        } else {
 
-                }
+                            String error = task.getException().getMessage();
+                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
 
-            }
-        });
+                        }
+
+                    }
+                });
 
         try {
 
@@ -110,41 +111,41 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
         //Get Likes Counts
         firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (!queryDocumentSnapshots.isEmpty()) {
-                    int count = queryDocumentSnapshots.size();
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            int count = queryDocumentSnapshots.size();
 
-                    holder.updateLikeCount(count);
+                            holder.updateLikeCount(count);
 
-                } else {
+                        } else {
 
-                    holder.updateLikeCount(0);
+                            holder.updateLikeCount(0);
 
-                }
-            }
-        });
+                        }
+                    }
+                });
 
         //Get Likes
         firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId)
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
-                if (documentSnapshot.exists()) {
+                        if (documentSnapshot.exists()) {
 
-                    holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.action_like_accent));
-                    holder.postLikeCount.setTextColor(ContextCompat.getColor(context, R.color.Like_Accent));
+                            holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.action_like_accent));
+                            holder.postLikeCount.setTextColor(ContextCompat.getColor(context, R.color.Like_Accent));
 
-                } else {
+                        } else {
 
-                    holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.action_like_gray));
-                    holder.postLikeCount.setTextColor(ContextCompat.getColor(context, R.color.Like_Gray));
+                            holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.action_like_gray));
+                            holder.postLikeCount.setTextColor(ContextCompat.getColor(context, R.color.Like_Gray));
 
-                }
+                        }
 
-            }
-        });
+                    }
+                });
 
 
         //Likes Feature
@@ -154,22 +155,22 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
                 firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).get()
                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                        if (!task.getResult().exists()) {
-                            Map<String, Object> likesMap = new HashMap<>();
-                            likesMap.put("timestamp", FieldValue.serverTimestamp());
+                                if (!task.getResult().exists()) {
+                                    Map<String, Object> likesMap = new HashMap<>();
+                                    likesMap.put("timestamp", FieldValue.serverTimestamp());
 
-                            firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).set(likesMap);
+                                    firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).set(likesMap);
 
-                        } else {
+                                } else {
 
-                            firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).delete();
+                                    firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).delete();
 
-                        }
-                    }
-                });
+                                }
+                            }
+                        });
 
             }
         });

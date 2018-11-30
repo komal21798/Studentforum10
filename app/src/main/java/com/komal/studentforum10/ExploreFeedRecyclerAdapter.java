@@ -102,7 +102,8 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             holder.setPostDate(dateString);
 
             //Get Likes Counts
-            firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes")
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                     if(!queryDocumentSnapshots.isEmpty())

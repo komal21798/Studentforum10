@@ -29,7 +29,7 @@
     <string name="title_activity_thread">ThreadActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    
+
     <string-array name="program_name">
         <item>B-Tech</item>
         <item>MBA</item>
@@ -40,7 +40,7 @@
         <item>BCA</item>
         <item>BArch</item>
         <item>BLAD</item>
-       <item> BBA.LLB</item>
+        <item> BBA.LLB</item>
     </string-array>
 
     <string-array name="department_name">
