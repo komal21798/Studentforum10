@@ -232,6 +232,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
             public void onClick(View v) {
 
                 Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                commentsIntent.putExtra("postThreadId", postThread);
                 commentsIntent.putExtra("threadPageId", threadPageId);
                 context.startActivity(commentsIntent);
 
