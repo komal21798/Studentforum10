@@ -108,6 +108,22 @@
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
 
+            <Button
+                android:id="@+id/guestLoginBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/colorAccent"
+
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:text="Guest Login"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+
         </LinearLayout>
     </ScrollView>
 
