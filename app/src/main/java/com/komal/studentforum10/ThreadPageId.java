@@ -6,7 +6,6 @@ import com.google.firebase.firestore.Exclude;
 
 public class ThreadPageId {
 
-
     @Exclude
     public String threadPageId;
 

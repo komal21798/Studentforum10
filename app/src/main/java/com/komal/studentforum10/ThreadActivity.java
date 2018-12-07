@@ -3,6 +3,7 @@ package com.komal.studentforum10;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuInflater;
@@ -35,6 +36,7 @@ public class ThreadActivity extends AppCompatActivity {
 
     private TextView threadName;
     private TextView threadSubscribers;
+    private TextView threadDesc;
     private Button subscribeBtn;
     private Button unsubscribeBtn;
 
@@ -51,7 +53,9 @@ public class ThreadActivity extends AppCompatActivity {
 
     private Boolean isFirstPageFirstLoaded = true;
 
-    private String CategoryId;
+    public static String CategoryId;
+    public static String CategoryDesc;
+
     private String user_id;
     private int subscribersCount;
 
@@ -65,12 +69,16 @@ public class ThreadActivity extends AppCompatActivity {
         //Get categoryId from previous activity i.e. category fragment
         Bundle bundle = getIntent().getExtras();
         CategoryId = bundle.getString("CategoryId");
+        CategoryDesc = bundle.getString("CategoryDesc");
 
         threadName = findViewById(R.id.threadName);
         threadName.setText(CategoryId);
         threadSubscribers = findViewById(R.id.threadSubscribers);
         subscribeBtn = findViewById(R.id.subscribeBtn);
         unsubscribeBtn = findViewById(R.id.unsubscribeBtn);
+        threadDesc = findViewById(R.id.threadDesc);
+
+        threadDesc.setText(CategoryDesc);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();

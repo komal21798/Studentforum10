@@ -59,56 +59,30 @@
         android:id="@+id/newPostBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="23dp"
         android:layout_marginTop="327dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Post"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/videoAttachment"
-        app:layout_constraintTop_toBottomOf="@+id/newPostName"
         android:background="@drawable/rounded_button"
         android:backgroundTint="@color/colorAccent"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
+        android:text="Post"
         android:textColor="#ffffff"
-        android:textSize="14sp"/>
-
-    <ImageView
-        android:id="@+id/fileAttachment"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="41dp"
-        android:layout_marginTop="326dp"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/ic_attachment_black_24dp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newPostName" />
-
-    <ImageView
-        android:id="@+id/videoAttachment"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginTop="329dp"
-        android:layout_marginBottom="17dp"
-        android:src="@drawable/ic_videocam_black_24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/photoAttachment"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newPostName" />
 
     <ImageView
         android:id="@+id/photoAttachment"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginStart="38dp"
         android:layout_marginTop="326dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="20dp"
         android:src="@drawable/ic_add_a_photo_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/fileAttachment"
+        app:layout_constraintEnd_toStartOf="@+id/newPostBtn"
         app:layout_constraintTop_toBottomOf="@+id/newPostName" />
 
     <ProgressBar
@@ -116,7 +90,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="13dp"
-        android:indeterminate="false"
+        android:indeterminate="true"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

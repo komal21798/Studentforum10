@@ -44,6 +44,8 @@ public class CategoriesFeedRecyclerAdapter extends RecyclerView.Adapter<Categori
 
         final String CategoryId = categoriesFeedList.get(position).CategoryId;
 
+        final String threadDesc = categoriesFeedList.get(position).getThread_desc();
+
         final String threadNameData = categoriesFeedList.get(position).getThread_name();
         holder.setThreadName(threadNameData);
 
@@ -53,6 +55,7 @@ public class CategoriesFeedRecyclerAdapter extends RecyclerView.Adapter<Categori
 
                 Intent intent = new Intent(context, ThreadActivity.class);
                 intent.putExtra("CategoryId", CategoryId);
+                intent.putExtra("CategoryDesc", threadDesc);
                 context.startActivity(intent);
 
             }

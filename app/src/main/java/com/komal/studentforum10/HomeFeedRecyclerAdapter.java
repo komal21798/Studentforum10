@@ -108,6 +108,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
                 holder.setPostDate(dateString);
             } catch (Exception e) {
 
+
                 Toast.makeText(context, "Exception : " + e.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
@@ -145,12 +146,12 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
                                 holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.action_like_gray));
                                 holder.postLikeCount.setTextColor(ContextCompat.getColor(context, R.color.Like_Gray));
+     
 
                             }
 
                         }
                     });
-
 
 
             //Likes Feature
@@ -171,7 +172,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
                                         likesMap.put("timestamp", FieldValue.serverTimestamp());
 
                                         firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).set(likesMap);
-
+      
                                     } else {
 
                                         firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).delete();
