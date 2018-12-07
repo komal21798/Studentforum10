@@ -93,7 +93,11 @@ public class NewThreadFragment extends Fragment {
                 String threadName = newThreadName.getText().toString();
                 String threadDesc = newThreadDesc.getText().toString();
 
-                if(!TextUtils.isEmpty(threadName) && !TextUtils.isEmpty(threadDesc)) {
+                if (firebaseAuth.getCurrentUser().isAnonymous()){
+                    Toast.makeText(getActivity(),"First Login In",Toast.LENGTH_LONG).show();
+                }
+
+              else  if(!TextUtils.isEmpty(threadName) && !TextUtils.isEmpty(threadDesc)) {
 
                     newThreadProgress.setVisibility(View.VISIBLE);
 

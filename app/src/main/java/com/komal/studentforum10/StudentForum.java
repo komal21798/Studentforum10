@@ -2,6 +2,7 @@ package com.komal.studentforum10;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -113,22 +114,15 @@ public class StudentForum extends AppCompatActivity {
         final NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
 
         //to check for internet connection
-        if(!isConnected(StudentForum.this)) {
+        if (!isConnected(StudentForum.this)) {
 
             buildDialog(StudentForum.this).show();
 
         }
+        // guestlogin
+        if (mAuth.getCurrentUser().isAnonymous()) {
 
-        //to check if email is verified
-        if(!firebaseUser.isEmailVerified()) {
-
-            Toast.makeText(this, "Please verify your email to login.", Toast.LENGTH_LONG).show();
-            goToLogin();
-
-        }
-
-        else {
-
+            Intent guestactivity = new Intent(StudentForum.this, HomeFragment.class);
             nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -137,17 +131,14 @@ public class StudentForum extends AppCompatActivity {
 
                     int id = item.getItemId();
 
-                    if(id == R.id.my_profile){
+                  //  if (id == R.id.my_profile) {
 
-                        setupAccount();
+                        //setupAccount();
 
-                    }
-
-                    else if(id == R.id.settings){
-                        settings();
-                    }
-
-                    else if(id == R.id.logout){
+                    //} else if (id == R.id.settings) {
+                      //  settings();
+                   // }
+                     if (id == R.id.logout) {
 
                         logout();
 
@@ -156,11 +147,62 @@ public class StudentForum extends AppCompatActivity {
                     return true;
                 }
             });
-
         }
 
 
-    }
+
+
+
+        //to check if email is verified
+
+
+            if (!firebaseUser.isAnonymous())
+            {
+                if (firebaseUser.isEmailVerified())
+                {
+
+
+                Toast.makeText(this, "Please verify your email to login.", Toast.LENGTH_LONG).show();
+                goToLogin();
+
+                 }
+
+                 nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                        @Override
+                        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                            Intent myIntent;
+
+                            int id = item.getItemId();
+
+                            if (id == R.id.my_profile) {
+
+                                setupAccount();
+
+                            } else if (id == R.id.settings) {
+                                settings();
+                            } else if (id == R.id.logout) {
+
+                                logout();
+
+                            }
+
+                            return true;
+                        }
+                    });
+                }
+
+            }
+
+
+
+
+
+
+//      private void goToMain() {
+    //    Intent guestactivity = new Intent(StudentForum.this,HomeFragment.class);
+      //  startActivity(guestactivity);
+    //}
 
 
     @Override
@@ -177,6 +219,9 @@ public class StudentForum extends AppCompatActivity {
     }
 
     public void logout(){
+        if (firebaseUser.isAnonymous()) {
+            firebaseUser.delete();
+       }
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(StudentForum.this);
         builder.setMessage(" Are you sure you want to logout ?");
@@ -246,5 +291,7 @@ public class StudentForum extends AppCompatActivity {
 
         return builder;
     }
+
+
 
 }
