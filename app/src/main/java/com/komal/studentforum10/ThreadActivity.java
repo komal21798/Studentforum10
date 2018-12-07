@@ -91,6 +91,7 @@ public class ThreadActivity extends AppCompatActivity {
         threadPageRecyclerAdapter = new ThreadPageRecyclerAdapter(threadPageList);
         threadPageView.setLayoutManager(new LinearLayoutManager(this));
         threadPageView.setAdapter(threadPageRecyclerAdapter);
+
         threadName = findViewById(R.id.threadName);
 
         firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")

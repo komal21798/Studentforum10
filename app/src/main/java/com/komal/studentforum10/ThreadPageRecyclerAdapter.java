@@ -98,57 +98,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
                     }
                 });
 
-        /*//User Data will be retrieved here...
-        firebaseFirestore.collection("Users").document(user_id).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                if(task.isSuccessful()){
-
-                    String userName = task.getResult().getString("username");
-                    String userImage = task.getResult().getString("profile_image");
-
-                    holder.setUsername(userName);
-                    holder.setUserimage(userImage);
-
-
-                } else {
-
-                    Intent newIntent = new Intent(context, StudentForum.class);
-                    context.startActivity(newIntent);
-
-                }
-
-            }
-        });*/
-
-        /*firebaseFirestore.collection("Users").document(user_id).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                        String postUsername;
-                        String postUserimage;
-
-                        if (task.isSuccessful()) {
-
-                            postUsername = task.getResult().getString("username");
-                            postUserimage = task.getResult().getString("profile_image");
-
-                            holder.setUsername(postUsername);
-                            holder.setUserimage(postUserimage);
-
-                        } else {
-
-                            String error = task.getException().getMessage();
-                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
-
-                        }
-
-                    }
-                });
-*/
         try {
 
             long millisecond = threadPageList.get(position).getTimestamp().getTime();
@@ -285,24 +235,6 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
             postName = mView.findViewById(R.id.postName);
             postName.setText(postText);
-
-        }
-
-        public void setUsername(String postUsernameText) {
-
-            postUsername = mView.findViewById(R.id.postUsername);
-            postUsername.setText(postUsernameText);
-
-        }
-
-        public void setUserimage(String postUserimageText) {
-
-            postUserimage = mView.findViewById(R.id.postUserImage);
-
-            RequestOptions placeholderOption = new RequestOptions();
-            placeholderOption.placeholder(R.mipmap.ic_launcher_foreground);
-
-            Glide.with(context).applyDefaultRequestOptions(placeholderOption).load(postUserimageText).into(postUserimage);
 
         }
 

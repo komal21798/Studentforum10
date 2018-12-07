@@ -3,6 +3,7 @@ package com.komal.studentforum10;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -36,26 +37,24 @@ import javax.annotation.Nullable;
 
 public class CommentsActivity extends AppCompatActivity {
 
-    private TextView commentName;
     private ImageView addCommentButton;
     private EditText commentsEditText;
 
     private RecyclerView commentsPageView;
     private List<CommentsFeed> commentsPageList;
 
-    //private CommentsFeedRecyclerAdapter commentsPageRecyclerAdapter;
+    private CommentsFeedRecyclerAdapter commentsFeedRecyclerAdapter;
 
     private FirebaseFirestore firebaseFirestore;
-
     private FirebaseAuth firebaseAuth;
+
+    public static String postId;
+    public static String CategoryId;
+    private String user_id;
 
     private DocumentSnapshot lastVisible;
 
     private Boolean isFirstPageFirstLoaded = true;
-
-    public static String threadPageId;
-    public static String CategoryId;
-    private String user_id;
 
 
     @Override
@@ -64,10 +63,9 @@ public class CommentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_comments);
 
         Bundle bundle = getIntent().getExtras();
-        threadPageId = bundle.getString("threadPageId");
+        postId = bundle.getString("threadPageId");
         CategoryId = bundle.getString("postThreadId");
 
-        commentName = findViewById(R.id.commentName);
         addCommentButton = findViewById(R.id.addCommentButton);
         commentsEditText = findViewById(R.id.commentsEditText);
 
@@ -79,9 +77,9 @@ public class CommentsActivity extends AppCompatActivity {
         commentsPageView = (RecyclerView) findViewById(R.id.commentsPageView);
         commentsPageList = new ArrayList<>();
 
-        //commentsPageRecyclerAdapter = new CommentsFeedRecyclerAdapter(commentsPageList);
-        //commentsPageView.setLayoutManager(new LinearLayoutManager(this));
-        //commentsPageView.setAdapter(commentsPageRecyclerAdapter);
+        commentsFeedRecyclerAdapter = new CommentsFeedRecyclerAdapter(commentsPageList);
+        commentsPageView.setLayoutManager(new LinearLayoutManager(this));
+        commentsPageView.setAdapter(commentsFeedRecyclerAdapter);
 
         //for adding new comment
         addCommentButton.setOnClickListener(new View.OnClickListener() {
@@ -90,25 +88,25 @@ public class CommentsActivity extends AppCompatActivity {
 
                 String comments_editext = commentsEditText.getText().toString();
 
-                if(!TextUtils.isEmpty(comments_editext))
-                {
+                if (!TextUtils.isEmpty(comments_editext)) {
                     Map<String, Object> commentsMap = new HashMap<>();
                     commentsMap.put("user_id", user_id);
                     commentsMap.put("comment", comments_editext);
                     commentsMap.put("timestamp", FieldValue.serverTimestamp());
+                    commentsMap.put("post_name", postId);
+                    commentsMap.put("thread_name", CategoryId);
 
-                    firebaseFirestore.collection("Posts/" + threadPageId + "/Comments").document().set(commentsMap);
-                    firebaseFirestore.collection("Threads/" + CategoryId + "/Posts/" + threadPageId  + "/Comments").document().set(commentsMap)
+                    firebaseFirestore.collection("Posts/" + postId + "/Comments").document().set(commentsMap);
+                    firebaseFirestore.collection("Threads/" + CategoryId + "/Posts/" + postId + "/Comments").document().set(commentsMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
 
-                                    if(task.isSuccessful()){
+                                    if (task.isSuccessful()) {
 
                                         Toast.makeText(CommentsActivity.this, "Comment posted successfully!", Toast.LENGTH_SHORT).show();
 
-                                    }
-                                    else{
+                                    } else {
 
                                         String error = task.getException().getMessage();
                                         Toast.makeText(CommentsActivity.this, "Error:" + error, Toast.LENGTH_SHORT).show();
@@ -122,12 +120,10 @@ public class CommentsActivity extends AppCompatActivity {
                     Toast.makeText(CommentsActivity.this, "Please fill all the details.", Toast.LENGTH_SHORT).show();
 
                 }
-
-
             }
         });
 
-        /*//for loading the posts
+        //for loading more comments
         if (firebaseAuth.getCurrentUser() != null) {
 
             commentsPageView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -145,17 +141,17 @@ public class CommentsActivity extends AppCompatActivity {
                 }
             });
 
-            Query firstQuery = firebaseFirestore.collection("Threads")
-                    .document(CategoryId)
-                    .collection("Posts")
-                    .orderBy("timestamp", Query.Direction.DESCENDING)
+
+            //for loading comments
+
+            Query firstQuery = firebaseFirestore.collection("Threads/" + CategoryId + "/Posts/" + postId + "/Comments")
+                    .orderBy("timestamp", Query.Direction.ASCENDING)
                     .limit(15);
 
             firstQuery.addSnapshotListener(CommentsActivity.this, new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                    // Get the last visible document
                     if (!queryDocumentSnapshots.isEmpty()) {
 
                         if (isFirstPageFirstLoaded) {
@@ -169,9 +165,9 @@ public class CommentsActivity extends AppCompatActivity {
 
                             if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                                String commentsFeedId = doc.getDocument().getId();
+                                String commentFeedId = doc.getDocument().getId();
                                 CommentsFeed commentsFeed = doc.getDocument()
-                                        .toObject(CommentsFeed.class).withId(commentsFeedId);
+                                        .toObject(CommentsFeed.class).withId(commentFeedId);
                                 if (isFirstPageFirstLoaded) {
 
                                     commentsPageList.add(commentsFeed);
@@ -182,25 +178,33 @@ public class CommentsActivity extends AppCompatActivity {
 
                                 }
 
-                                //commentsPageRecyclerAdapter.notifyDataSetChanged();
+                                commentsFeedRecyclerAdapter.notifyDataSetChanged();
+
                             }
                         }
 
                         isFirstPageFirstLoaded = false;
+
                     }
+
+
                 }
             });
-        }*/
+        }
     }
 
     public void loadMorePost() {
 
-        Query nextQuery = firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
+        Query nextQuery = firebaseFirestore.collection("Threads")
+                .document(CategoryId)
+                .collection("Posts")
+                .document(postId)
+                .collection("Comments")
+                .orderBy("timestamp", Query.Direction.ASCENDING)
                 .startAfter(lastVisible)
                 .limit(15);
 
-        nextQuery.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+        nextQuery.addSnapshotListener(CommentsActivity.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
@@ -212,9 +216,10 @@ public class CommentsActivity extends AppCompatActivity {
                         if (doc.getType() == DocumentChange.Type.ADDED) {
 
                             String commentsFeedId = doc.getDocument().getId();
-                            CommentsFeed commentsFeed = doc.getDocument().toObject(CommentsFeed.class).withId(commentsFeedId);
+                            CommentsFeed commentsFeed = doc.getDocument().toObject(CommentsFeed.class)
+                                    .withId(commentsFeedId);
                             commentsPageList.add(commentsFeed);
-                            //commentsPageRecyclerAdapter.notifyDataSetChanged();
+                            commentsFeedRecyclerAdapter.notifyDataSetChanged();
 
                         }
 
@@ -222,6 +227,7 @@ public class CommentsActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     public void showPopup(View v) {
@@ -230,6 +236,5 @@ public class CommentsActivity extends AppCompatActivity {
         inflater.inflate(R.menu.popupactions, popup.getMenu());
         popup.show();
     }
-
 
 }
