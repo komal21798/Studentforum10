@@ -28,6 +28,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/threadName" />
 
+    <TextView
+        android:id="@+id/threadDesc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/threadSubscribers" />
+
     <Button
         android:id="@+id/subscribeBtn"
         android:layout_width="97dp"
@@ -66,13 +79,13 @@
 
     <View
         android:id="@+id/divider"
-        android:layout_width="368dp"
+        android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/threadSubscribers" />
+        app:layout_constraintTop_toBottomOf="@+id/threadDesc" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/threadPageView"
