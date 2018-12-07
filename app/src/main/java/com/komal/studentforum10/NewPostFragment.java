@@ -42,15 +42,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class NewPostFragment extends Fragment {
 
-    private AutoCompleteTextView newPostThread;
+    private EditText newPostThread;
     private EditText newPostName;
     private EditText newPostDesc;
     private Button newPostBtn;
     private ProgressBar newPostProgress;
 
-    private static final String[] Threads = new String[]{"Announcement","Clubs","Events","Festivals","Projects"
-,"Stan Lee","checking","checking2"
-    };
+
 
     private FirebaseAuth firebaseAuth;
     private StorageReference storageReference;
@@ -103,7 +101,7 @@ public class NewPostFragment extends Fragment {
         View v;
         v = inflater.inflate(R.layout.fragment_new_post, container, false);
 
-        newPostThread = (AutoCompleteTextView) v.findViewById(R.id.newPostThread);
+        newPostThread = (EditText) v.findViewById(R.id.newPostThread);
         newPostName = (EditText) v.findViewById(R.id.newPostName);
         newPostDesc = (EditText) v.findViewById(R.id.newPostDesc);
         newPostBtn = (Button) v.findViewById(R.id.newPostBtn);
@@ -111,11 +109,9 @@ public class NewPostFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
+          storageReference = FirebaseStorage.getInstance().getReference();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String >(getActivity(),android.R.layout.simple_list_item_1,Threads);
-        newPostThread.setAdapter(adapter);
-        newPostThread.setThreshold(0);
+
 
         //only adds text post and not images, gifs
         newPostBtn.setOnClickListener(new View.OnClickListener() {
