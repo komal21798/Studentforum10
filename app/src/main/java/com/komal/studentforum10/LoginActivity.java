@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,10 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -26,9 +29,10 @@ public class LoginActivity extends AppCompatActivity {
     private Button login_signup_btn;
     private ProgressBar login_progress;
     private Button forgotPasswordBtn;
+    private Button guestLoginBtn;
+    FirebaseAuth.AuthStateListener authListener;
+    FirebaseAuth mAuth;
 
-
-    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +48,39 @@ public class LoginActivity extends AppCompatActivity {
         login_signup_btn = (Button) findViewById(R.id.login_signup_btn);
         login_progress = (ProgressBar) findViewById(R.id.login_progress);
         forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn);
-
+        guestLoginBtn = (Button) findViewById(R.id.guestLoginBtn);
         mAuth = FirebaseAuth.getInstance();
+
+
+        //GuestLogin
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    Log.d("Auth:", user.getUid());
+                    Toast.makeText(getApplicationContext(), user.getUid(), Toast.LENGTH_SHORT).show();
+                    // Intent mainIntent = new Intent(LoginActivity.this,MainActivity.class);
+                    //startActivity(mainIntent);
+                }
+            }
+        };
+
+        guestLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Task<AuthResult> resultTask = mAuth.signInAnonymously();
+                resultTask.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        Intent mainIntent = new Intent(LoginActivity.this, StudentForum.class);
+                        startActivity(mainIntent);
+                        finish();
+                    }
+                });
+            }
+        });
+
 
         login_btn.setOnClickListener(new View.OnClickListener() {
 
@@ -55,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 String loginEmail = login_email.getText().toString();
                 String loginPassword = login_password.getText().toString();
 
-                if(!TextUtils.isEmpty(loginEmail) && !TextUtils.isEmpty(loginPassword)) {
+                if (!TextUtils.isEmpty(loginEmail) && !TextUtils.isEmpty(loginPassword)) {
 
                     login_progress.setVisibility(View.VISIBLE);
 
@@ -63,9 +98,9 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
 
-                                Intent mainIntent = new Intent(LoginActivity.this,StudentForum.class);
+                                Intent mainIntent = new Intent(LoginActivity.this, StudentForum.class);
                                 startActivity(mainIntent);
                                 finish();
 
@@ -87,12 +122,11 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-
         login_signup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent myIntent = new Intent(LoginActivity.this,SignUpActivity.class);
+                Intent myIntent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(myIntent);
 
             }
@@ -109,9 +143,19 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
+    }
 
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(authListener);
+    }
+
+    public void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(authListener);
+    }
 
 
 
     }
-}
+

@@ -45,7 +45,7 @@ public class ThreadActivity extends AppCompatActivity {
 
     private FirebaseFirestore firebaseFirestore;
 
-    private FirebaseAuth firebaseAuth;
+    public FirebaseAuth firebaseAuth;
 
     private DocumentSnapshot lastVisible;
 
@@ -57,7 +57,7 @@ public class ThreadActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thread);
 
@@ -85,64 +85,35 @@ public class ThreadActivity extends AppCompatActivity {
         threadPageView.setAdapter(threadPageRecyclerAdapter);
         threadName = findViewById(R.id.threadName);
 
-        firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
-                .document(user_id)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                        if (!task.getResult().exists()) {
-
-                            subscribeBtn.setVisibility(View.VISIBLE);
-
-                        } else {
-
-                            unsubscribeBtn.setVisibility(View.VISIBLE);
-
-                        }
-                    }
-                });
+        //anonymous login
+        if (firebaseAuth.getCurrentUser().isAnonymous()) {
 
 
-        //for loading the posts
-        if (firebaseAuth.getCurrentUser() != null) {
-
-            threadPageView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-
-                    Boolean reachedBottom = !recyclerView.canScrollVertically(1);
-
-                    if (reachedBottom) {
-
-                        loadMorePost();
-
-                    }
-                }
-            });
+        }
 
 
-            //for getting the number of subscribers
+
+        {
+
+
             firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
-                    .addSnapshotListener(ThreadActivity.this, new EventListener<QuerySnapshot>() {
-
+                    .document(user_id)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
-                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                            if (!queryDocumentSnapshots.isEmpty()) {
 
-                                subscribersCount = queryDocumentSnapshots.size();
+                            if (!task.getResult().exists()) {
+
+                                subscribeBtn.setVisibility(View.VISIBLE);
 
                             } else {
 
-                                subscribersCount = 0;
+                                unsubscribeBtn.setVisibility(View.VISIBLE);
 
                             }
 
-                            //setting the subscribers count
-                            threadSubscribers.setText(subscribersCount + " subscribers");
                         }
                     });
 
@@ -152,7 +123,7 @@ public class ThreadActivity extends AppCompatActivity {
                         @Override
                         public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
-                            if(documentSnapshot.exists()) {
+                            if (documentSnapshot.exists()) {
 
                                 unsubscribeBtn.setVisibility(View.VISIBLE);
 
@@ -166,8 +137,11 @@ public class ThreadActivity extends AppCompatActivity {
 
             //subscribing
             subscribeBtn.setOnClickListener(new View.OnClickListener() {
+
+
                 @Override
                 public void onClick(View v) {
+
 
                     subscribeBtn.setVisibility(View.INVISIBLE);
 
@@ -183,8 +157,11 @@ public class ThreadActivity extends AppCompatActivity {
                 }
             });
 
+
             //unsubscribing
             unsubscribeBtn.setOnClickListener(new View.OnClickListener() {
+
+
                 @Override
                 public void onClick(View v) {
 
@@ -199,55 +176,102 @@ public class ThreadActivity extends AppCompatActivity {
                 }
             });
 
-            Query firstQuery = firebaseFirestore.collection("Threads")
-                    .document(CategoryId)
-                    .collection("Posts")
-                    .orderBy("timestamp", Query.Direction.DESCENDING)
-                    .limit(15);
-
-            firstQuery.addSnapshotListener(ThreadActivity.this, new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-
-                    // Get the last visible document
-                    if (!queryDocumentSnapshots.isEmpty()) {
-
-                        if (isFirstPageFirstLoaded) {
-
-                            // Get the last visible document
-                            lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
-
-                        }
-
-                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-
-                            if (doc.getType() == DocumentChange.Type.ADDED) {
-
-                                String threadPageId = doc.getDocument().getId();
-                                ThreadPage threadPage = doc.getDocument()
-                                        .toObject(ThreadPage.class).withId(threadPageId);
-                                if (isFirstPageFirstLoaded) {
-
-                                    threadPageList.add(threadPage);
-
-                                } else {
-
-                                    threadPageList.add(0, threadPage);
-
-                                }
-
-                                threadPageRecyclerAdapter.notifyDataSetChanged();
-                            }
-                        }
-
-                        isFirstPageFirstLoaded = false;
-                    }
-                }
-            });
         }
+
+    //for loading the posts
+
+        if (firebaseAuth.getCurrentUser() != null) {
+
+        threadPageView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                Boolean reachedBottom = !recyclerView.canScrollVertically(1);
+
+                if (reachedBottom) {
+
+                    loadMorePost();
+
+                }
+            }
+        });
+
+
+        //for getting the number of subscribers
+        firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
+                .addSnapshotListener(ThreadActivity.this, new EventListener<QuerySnapshot>() {
+
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                        if (!queryDocumentSnapshots.isEmpty()) {
+
+                            subscribersCount = queryDocumentSnapshots.size();
+
+                        } else {
+
+                            subscribersCount = 0;
+
+                        }
+
+                        //setting the subscribers count
+                        threadSubscribers.setText(subscribersCount + " subscribers");
+                    }
+                });
+
+
+
+        Query firstQuery = firebaseFirestore.collection("Threads")
+                .document(CategoryId)
+                .collection("Posts")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .limit(15);
+
+        firstQuery.addSnapshotListener(ThreadActivity.this, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                // Get the last visible document
+                if (!queryDocumentSnapshots.isEmpty()) {
+
+                    if (isFirstPageFirstLoaded) {
+
+                        // Get the last visible document
+                        lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+
+                    }
+
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+
+                            String threadPageId = doc.getDocument().getId();
+                            ThreadPage threadPage = doc.getDocument()
+                                    .toObject(ThreadPage.class).withId(threadPageId);
+                            if (isFirstPageFirstLoaded) {
+
+                                threadPageList.add(threadPage);
+
+                            } else {
+
+                                threadPageList.add(0, threadPage);
+
+                            }
+
+                            threadPageRecyclerAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    isFirstPageFirstLoaded = false;
+                }
+            }
+        });
     }
 
-    public void loadMorePost() {
+}
+
+    public void loadMorePost () {
 
         Query nextQuery = firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -276,12 +300,16 @@ public class ThreadActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
-    public void showPopup(View v) {
+    public void showPopup (View v){
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.popupactions, popup.getMenu());
         popup.show();
     }
+
+
+
 }

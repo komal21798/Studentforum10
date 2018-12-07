@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -18,10 +21,17 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.core.DatabaseInfo;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -32,17 +42,21 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class NewPostFragment extends Fragment {
 
-    private EditText newPostThread;
+    private AutoCompleteTextView newPostThread;
     private EditText newPostName;
     private EditText newPostDesc;
     private Button newPostBtn;
     private ProgressBar newPostProgress;
 
+    private static final String[] Threads = new String[]{"Announcement","Clubs","Events","Festivals","Projects"
+,"Stan Lee","checking","checking2"
+    };
+
     private FirebaseAuth firebaseAuth;
     private StorageReference storageReference;
     private FirebaseFirestore firebaseFirestore;
-
     private String user_id;
+    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -80,6 +94,8 @@ public class NewPostFragment extends Fragment {
         }
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -87,7 +103,7 @@ public class NewPostFragment extends Fragment {
         View v;
         v = inflater.inflate(R.layout.fragment_new_post, container, false);
 
-        newPostThread = (EditText) v.findViewById(R.id.newPostThread);
+        newPostThread = (AutoCompleteTextView) v.findViewById(R.id.newPostThread);
         newPostName = (EditText) v.findViewById(R.id.newPostName);
         newPostDesc = (EditText) v.findViewById(R.id.newPostDesc);
         newPostBtn = (Button) v.findViewById(R.id.newPostBtn);
@@ -97,7 +113,9 @@ public class NewPostFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
 
-        user_id = firebaseAuth.getCurrentUser().getUid();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String >(getActivity(),android.R.layout.simple_list_item_1,Threads);
+        newPostThread.setAdapter(adapter);
+        newPostThread.setThreshold(0);
 
         //only adds text post and not images, gifs
         newPostBtn.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +126,20 @@ public class NewPostFragment extends Fragment {
                 String post_name = newPostName.getText().toString();
                 String post_desc = newPostDesc.getText().toString();
 
-                if(!TextUtils.isEmpty(post_desc) && !TextUtils.isEmpty(post_name) && !TextUtils.isEmpty(post_thread)) {
+                if(firebaseAuth.getCurrentUser().isAnonymous()){
+                    Toast.makeText(getActivity(),"You Don't Have the required privelege",Toast.LENGTH_LONG).show();
+                }
+
+                       /* @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(getActivity(), "New Post Error:" , Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });*/
+
+
+                else if(!TextUtils.isEmpty(post_desc) && !TextUtils.isEmpty(post_name) && !TextUtils.isEmpty(post_thread)) {
 
                     newPostProgress.setVisibility(View.VISIBLE);
 
@@ -186,4 +217,7 @@ public class NewPostFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }
+

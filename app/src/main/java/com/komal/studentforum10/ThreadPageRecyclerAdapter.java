@@ -171,32 +171,38 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
             }
         });
 
+            if (firebaseAuth.getCurrentUser().isAnonymous()){
+                Toast.makeText(context,"not allowed to like",Toast.LENGTH_SHORT).show();
+            }
+            else {
+                //Likes Feature
+                holder.postLikeBtn.setOnClickListener(new View.OnClickListener() {
 
-        //Likes Feature
-        holder.postLikeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    public void onClick(View view) {
 
-                        if (!task.getResult().exists()) {
-                            Map<String, Object> likesMap = new HashMap<>();
-                            likesMap.put("timestamp", FieldValue.serverTimestamp());
+                        firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                            firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
+                                if (!task.getResult().exists()) {
+                                    Map<String, Object> likesMap = new HashMap<>();
+                                    likesMap.put("timestamp", FieldValue.serverTimestamp());
 
-                        } else {
+                                    firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
 
-                            firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
+                                } else {
 
-                        }
+                                    firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
+
+                                }
+                            }
+                        });
+
                     }
                 });
-
             }
-        });
 
 
     }
