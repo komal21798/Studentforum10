@@ -39,6 +39,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
     private Context context;
+    private int count;
 
     public ExploreFeedRecyclerAdapter(List<ExploreFeed> exploreFeedList) {
 
@@ -73,7 +74,8 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
         String user_id = exploreFeedList.get(position).getUser_id();
 
-        firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Users").document(user_id).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
@@ -114,8 +116,8 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         if (!queryDocumentSnapshots.isEmpty()) {
-                            int count = queryDocumentSnapshots.size();
 
+                            count = queryDocumentSnapshots.size();
                             holder.updateLikeCount(count);
 
                         } else {
@@ -126,9 +128,16 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
                     }
                 });
 
+        /*if(count != 0)
+        {
+            exploreFeedList.get(position).setLikes_count(count);
+        }*/
+
+
         //Get Likes
 
-        firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes")
+                .document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
@@ -158,14 +167,14 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
                             likesMap.put("timestamp", FieldValue.serverTimestamp());
 
                             firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).set(likesMap);
-                            firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + exploreFeedId
-                                    + "/Likes").document(currentUserId).set(likesMap);
+                            /*firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + exploreFeedId
+                                    + "/Likes").document(currentUserId).set(likesMap);*/
 
                         } else {
 
                             firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).delete();
-                            firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + exploreFeedId
-                                    + "/Likes").document(currentUserId).delete();
+                            /*firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + exploreFeedId
+                                    + "/Likes").document(currentUserId).delete();*/
 
                         }
                     }

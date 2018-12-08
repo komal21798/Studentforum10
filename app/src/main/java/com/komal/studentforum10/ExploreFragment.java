@@ -79,7 +79,7 @@ public class ExploreFragment extends Fragment {
             });
 
             Query firstQuery = firebaseFirestore.collection("Posts")
-                    .orderBy("Likes",Query.Direction.DESCENDING)
+                    .orderBy("timestamp",Query.Direction.DESCENDING)
                     .limit(15);
 
             firstQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
@@ -131,7 +131,7 @@ public class ExploreFragment extends Fragment {
     public void loadMorePost(){
 
         Query nextQuery = firebaseFirestore.collection("Posts")
-                .orderBy("Likes",Query.Direction.DESCENDING)
+                .orderBy("timestamp",Query.Direction.DESCENDING)
                 .startAfter(lastVisible)
                 .limit(15);
 

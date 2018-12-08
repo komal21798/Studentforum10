@@ -49,7 +49,6 @@ public class NewPostFragment extends Fragment {
     private ProgressBar newPostProgress;
 
 
-
     private FirebaseAuth firebaseAuth;
     private StorageReference storageReference;
     private FirebaseFirestore firebaseFirestore;
@@ -93,10 +92,10 @@ public class NewPostFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View v;
         v = inflater.inflate(R.layout.fragment_new_post, container, false);
@@ -109,81 +108,71 @@ public class NewPostFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
-          storageReference = FirebaseStorage.getInstance().getReference();
+        storageReference = FirebaseStorage.getInstance().getReference();
 
-
+        user_id = firebaseAuth.getCurrentUser().getUid();
 
         //only adds text post and not images, gifs
         newPostBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String post_thread = newPostThread.getText().toString();
-                String post_name = newPostName.getText().toString();
-                String post_desc = newPostDesc.getText().toString();
+                if (firebaseAuth.getCurrentUser().isAnonymous()) {
 
-                if(firebaseAuth.getCurrentUser().isAnonymous()){
-                    Toast.makeText(getActivity(),"You Don't Have the required privelege",Toast.LENGTH_LONG).show();
-                }
-
-                       /* @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                Toast.makeText(getActivity(), "New Post Error:" , Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });*/
-
-
-                else if(!TextUtils.isEmpty(post_desc) && !TextUtils.isEmpty(post_name) && !TextUtils.isEmpty(post_thread)) {
-
-                    newPostProgress.setVisibility(View.VISIBLE);
-
-                    Map<String, Object> postMap = new HashMap<>();
-                    postMap.put("user_id", user_id);
-                    postMap.put("post_thread", post_thread);
-                    postMap.put("post_name", post_name);
-                    postMap.put("post_desc", post_desc);
-                    postMap.put("timestamp", FieldValue.serverTimestamp());
-
-
-
-
-                    firebaseFirestore.collection("Posts").document(post_name).set(postMap);
-
-
-
-
-                    firebaseFirestore.collection("Threads").document(post_thread).collection("Posts").document(post_name).set(postMap)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-
-                            if(task.isSuccessful()){
-
-                                Toast.makeText(getActivity(), "Posted successfully!", Toast.LENGTH_SHORT).show();
-                                goToHome();
-                                //doesnt finish the activity. Work on that
-
-                            } else {
-
-                                String error = task.getException().getMessage();
-                                Toast.makeText(getActivity(), "New Post Error:" + error, Toast.LENGTH_SHORT).show();
-
-                            }
-                        }
-                    });
+                    Toast.makeText(getActivity(), "Please login to access this functiomalit", Toast.LENGTH_LONG).show();
 
                 } else {
 
-                    Toast.makeText(getActivity(), "Please fill all the details.", Toast.LENGTH_SHORT).show();
+                    String post_thread = newPostThread.getText().toString();
+                    String post_name = newPostName.getText().toString();
+                    String post_desc = newPostDesc.getText().toString();
+
+
+                    if (!TextUtils.isEmpty(post_desc) && !TextUtils.isEmpty(post_name) && !TextUtils.isEmpty(post_thread)) {
+
+                        newPostProgress.setVisibility(View.VISIBLE);
+
+                        Map<String, Object> postMap = new HashMap<>();
+                        postMap.put("user_id", user_id);
+                        postMap.put("post_thread", post_thread);
+                        postMap.put("post_name", post_name);
+                        postMap.put("post_desc", post_desc);
+                        postMap.put("timestamp", FieldValue.serverTimestamp());
+
+                        firebaseFirestore.collection("Posts").document(post_name).set(postMap);
+
+                        firebaseFirestore.collection("Threads").document(post_thread).collection("Posts").document(post_name).set(postMap)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                        if (task.isSuccessful()) {
+
+                                            Toast.makeText(getActivity(), "Posted successfully!", Toast.LENGTH_SHORT).show();
+                                            goToHome();
+                                            //doesnt finish the activity. Work on that
+
+                                        } else {
+
+                                            String error = task.getException().getMessage();
+                                            Toast.makeText(getActivity(), "New Post Error:" + error, Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }
+                                });
+
+                    } else {
+
+                        Toast.makeText(getActivity(), "Please fill all the details.", Toast.LENGTH_SHORT).show();
+
+                    }
 
                 }
 
             }
         });
 
-        return  v;
+        return v;
     }
 
     public void goToHome() {

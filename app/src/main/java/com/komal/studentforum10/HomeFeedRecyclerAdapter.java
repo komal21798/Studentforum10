@@ -66,7 +66,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
         final String homeFeedId = homeFeedList.get(position).homeFeedId;
         final String currentUserId = firebaseAuth.getCurrentUser().getUid();
 
-        final String postThread = homeFeedList.get(position).getPost_thread();
+        //final String postThread = homeFeedList.get(position).getPost_thread();
 
         String postName = homeFeedList.get(position).getPost_name();
         holder.setPostName(postName);
@@ -85,8 +85,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
                             postUsername = task.getResult().getString("username");
                             postUserimage = task.getResult().getString("profile_image");
 
-                            holder.setUsername(postUsername);
-                            holder.setUserimage(postUserimage);
+                            holder.setUserData(postUsername, postUserimage);
 
                         } else {
 
@@ -172,14 +171,13 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
                                         likesMap.put("timestamp", FieldValue.serverTimestamp());
 
                                         firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).set(likesMap);
-                                        firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + homeFeedId
-                                                + "/Likes").document(currentUserId).set(likesMap);
+                                        //firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + homeFeedId
+                                        //+ "/Likes").document(currentUserId).set(likesMap);
 
                                     } else {
 
                                         firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).delete();
-                                        firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + homeFeedId
-                                                + "/Likes").document(currentUserId).delete();
+                                        //firebaseFirestore.collection("Threads/" + postThread)
 
                                     }
                                 }
@@ -240,6 +238,20 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             placeholderOption.placeholder(R.mipmap.ic_launcher_foreground);
 
             Glide.with(context).applyDefaultRequestOptions(placeholderOption).load(postUserimageText).into(postUserimage);
+        }
+
+        public void setUserData(String name, String image){
+
+            postUsername = mView.findViewById(R.id.postUsername);
+            postUserimage = mView.findViewById(R.id.postUserImage);
+
+            postUsername.setText(name);
+
+            RequestOptions placeholderOption = new RequestOptions();
+            placeholderOption.placeholder(R.drawable.ic_launcher_foreground);
+
+            Glide.with(context).applyDefaultRequestOptions(placeholderOption).load(image).into(postUserimage);
+
         }
 
         public void setPostDate(String postDateText) {
