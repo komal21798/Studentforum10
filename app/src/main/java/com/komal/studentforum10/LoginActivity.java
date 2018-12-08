@@ -52,30 +52,23 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
-        //GuestLogin
-        authListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    Log.d("Auth:", user.getUid());
-                    Toast.makeText(getApplicationContext(), user.getUid(), Toast.LENGTH_SHORT).show();
-                    // Intent mainIntent = new Intent(LoginActivity.this,MainActivity.class);
-                    //startActivity(mainIntent);
-                }
-            }
-        };
-
         guestLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                login_progress.setVisibility(View.VISIBLE);
+
                 Task<AuthResult> resultTask = mAuth.signInAnonymously();
+
                 resultTask.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
+
+                        login_progress.setVisibility(View.INVISIBLE);
                         Intent mainIntent = new Intent(LoginActivity.this, StudentForum.class);
                         startActivity(mainIntent);
                         finish();
+
                     }
                 });
             }
@@ -145,17 +138,5 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(authListener);
-    }
-
-    public void onStop() {
-        super.onStop();
-        mAuth.removeAuthStateListener(authListener);
-    }
-
-
-
-    }
+}
 

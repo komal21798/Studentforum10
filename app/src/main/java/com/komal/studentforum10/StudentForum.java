@@ -119,10 +119,10 @@ public class StudentForum extends AppCompatActivity {
             buildDialog(StudentForum.this).show();
 
         }
+
         // guestlogin
         if (mAuth.getCurrentUser().isAnonymous()) {
 
-            Intent guestactivity = new Intent(StudentForum.this, HomeFragment.class);
             nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -131,14 +131,7 @@ public class StudentForum extends AppCompatActivity {
 
                     int id = item.getItemId();
 
-                  //  if (id == R.id.my_profile) {
-
-                        //setupAccount();
-
-                    //} else if (id == R.id.settings) {
-                      //  settings();
-                   // }
-                     if (id == R.id.logout) {
+                    if (id == R.id.logout) {
 
                         logout();
 
@@ -150,59 +143,45 @@ public class StudentForum extends AppCompatActivity {
         }
 
 
-
-
-
         //to check if email is verified
+        if (!firebaseUser.isAnonymous()) {
 
-
-            if (!firebaseUser.isAnonymous())
-            {
-                if (firebaseUser.isEmailVerified())
-                {
+            if (!firebaseUser.isEmailVerified()) {
 
 
                 Toast.makeText(this, "Please verify your email to login.", Toast.LENGTH_LONG).show();
                 goToLogin();
 
-                 }
-
-                 nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-                        @Override
-                        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                            Intent myIntent;
-
-                            int id = item.getItemId();
-
-                            if (id == R.id.my_profile) {
-
-                                setupAccount();
-
-                            } else if (id == R.id.settings) {
-                                settings();
-                            } else if (id == R.id.logout) {
-
-                                logout();
-
-                            }
-
-                            return true;
-                        }
-                    });
-                }
-
             }
 
+            nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+                    Intent myIntent;
 
+                    int id = item.getItemId();
 
+                    if (id == R.id.my_profile) {
 
+                        setupAccount();
 
-//      private void goToMain() {
-    //    Intent guestactivity = new Intent(StudentForum.this,HomeFragment.class);
-      //  startActivity(guestactivity);
-    //}
+                    } else if (id == R.id.settings) {
+
+                        settings();
+
+                    } else if (id == R.id.logout) {
+
+                        logout();
+
+                    }
+
+                    return true;
+                }
+            });
+        }
+
+    }
 
 
     @Override
@@ -210,46 +189,71 @@ public class StudentForum extends AppCompatActivity {
         return abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
-    public void goToLogin(){
+    public void goToLogin() {
 
-        Intent loginIntent = new Intent(StudentForum.this,LoginActivity.class);
+        Intent loginIntent = new Intent(StudentForum.this, LoginActivity.class);
         startActivity(loginIntent);
         finish();
 
     }
 
-    public void logout(){
+    public void logout() {
+
         if (firebaseUser.isAnonymous()) {
-            firebaseUser.delete();
-       }
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(StudentForum.this);
-        builder.setMessage(" Are you sure you want to logout ?");
-        builder.setCancelable(true);
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mAuth.signOut();
-                goToLogin();
-                finish();
-            }
-        });
+            final AlertDialog.Builder builder = new AlertDialog.Builder(StudentForum.this);
+            builder.setMessage(" Are you sure you want to logout ?");
+            builder.setCancelable(true);
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+                    mAuth.signOut();
+                    firebaseUser.delete();
+                    goToLogin();
+                    finish();
+                }
+            });
 
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+
+        } else {
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(StudentForum.this);
+            builder.setMessage(" Are you sure you want to logout ?");
+            builder.setCancelable(true);
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mAuth.signOut();
+                    goToLogin();
+                    finish();
+                }
+            });
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+
+        }
 
     }
 
     public void setupAccount() {
 
-        Intent myIntent = new Intent(StudentForum.this,AccountSetupActivity.class);
+        Intent myIntent = new Intent(StudentForum.this, AccountSetupActivity.class);
         startActivity(myIntent);
 
     }
@@ -268,7 +272,8 @@ public class StudentForum extends AppCompatActivity {
             android.net.NetworkInfo wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             android.net.NetworkInfo mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-            if((mobile != null && mobile.isConnectedOrConnecting()) || (wifi != null && wifi.isConnectedOrConnecting())) return true;
+            if ((mobile != null && mobile.isConnectedOrConnecting()) || (wifi != null && wifi.isConnectedOrConnecting()))
+                return true;
             else return false;
         } else
             return false;
@@ -291,7 +296,6 @@ public class StudentForum extends AppCompatActivity {
 
         return builder;
     }
-
 
 
 }

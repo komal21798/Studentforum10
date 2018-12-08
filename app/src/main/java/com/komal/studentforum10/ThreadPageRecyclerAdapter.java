@@ -81,7 +81,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                        if(task.isSuccessful()) {
+                        if (task.isSuccessful()) {
 
                             String username = task.getResult().getString("username");
                             String userImage = task.getResult().getString("profile_image");
@@ -111,23 +111,24 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
         }
 
+
         //Get Likes Counts
         firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (!queryDocumentSnapshots.isEmpty()) {
-                    int count = queryDocumentSnapshots.size();
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            int count = queryDocumentSnapshots.size();
 
-                    holder.updateLikeCount(count);
+                            holder.updateLikeCount(count);
 
-                } else {
+                        } else {
 
-                    holder.updateLikeCount(0);
+                            holder.updateLikeCount(0);
 
-                }
-            }
-        });
+                        }
+                    }
+                });
 
         //Get Likes
         firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -145,48 +146,53 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
             }
         });
 
-            if (firebaseAuth.getCurrentUser().isAnonymous()){
-                Toast.makeText(context,"not allowed to like",Toast.LENGTH_SHORT).show();
-            }
-            else {
-                //Likes Feature
-                holder.postLikeBtn.setOnClickListener(new View.OnClickListener() {
+        if (firebaseAuth.getCurrentUser().isAnonymous()) {
+
+            Toast.makeText(context, "not allowed to like", Toast.LENGTH_SHORT).show();
+
+        } else {
+
+            //Likes Feature
+            holder.postLikeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes")
+                            .document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                            if (!task.getResult().exists()) {
+                                Map<String, Object> likesMap = new HashMap<>();
+                                likesMap.put("timestamp", FieldValue.serverTimestamp());
 
 
-                firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onClick(View view) {
+                                firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
+                                firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
+
+                            } else {
+
+                                firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
+                                firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
 
 
-                        firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                                if (!task.getResult().exists()) {
-                                    Map<String, Object> likesMap = new HashMap<>();
-                                    likesMap.put("timestamp", FieldValue.serverTimestamp());
-
-
-                            firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
-                            firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
-
-                                } else {
-
-                            firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
-                            firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
-
+                            }
 
                         }
-                    }
-                });
-            }
+                    });
+                }
+            });
+
+        }
+
+
 
         //going to comments activity
         holder.postCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(postThread.equals("Register")) {
+                if (postThread.equals("Register")) {
 
                     Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
                     registerIntent.putExtra("threadPageId", threadPageId);
@@ -203,7 +209,6 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
             }
         });
-
     }
 
     @Override
@@ -271,3 +276,4 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
     }
 
 }
+

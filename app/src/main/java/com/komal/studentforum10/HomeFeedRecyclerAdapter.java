@@ -66,101 +66,101 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
         final String homeFeedId = homeFeedList.get(position).homeFeedId;
         final String currentUserId = firebaseAuth.getCurrentUser().getUid();
 
+        final String postThread = homeFeedList.get(position).getPost_thread();
+
         String postName = homeFeedList.get(position).getPost_name();
         holder.setPostName(postName);
 
         String user_id = homeFeedList.get(position).getUser_id();
 
+        firebaseFirestore.collection("Users").document(user_id).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-        if (firebaseAuth.getCurrentUser().isAnonymous()) {
-            Toast.makeText(context, "You Don't Have the required privilege", Toast.LENGTH_SHORT).show();
-        } else {
+                        String postUsername;
+                        String postUserimage;
+                        if (task.isSuccessful()) {
 
-            firebaseFirestore.collection("Users").document(user_id).get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            postUsername = task.getResult().getString("username");
+                            postUserimage = task.getResult().getString("profile_image");
 
-                            String postUsername;
-                            String postUserimage;
-                            if (task.isSuccessful()) {
+                            holder.setUsername(postUsername);
+                            holder.setUserimage(postUserimage);
 
-                                postUsername = task.getResult().getString("username");
-                                postUserimage = task.getResult().getString("profile_image");
+                        } else {
 
-                                holder.setUsername(postUsername);
-                                holder.setUserimage(postUserimage);
-
-                            } else {
-
-                                String error = task.getException().getMessage();
-                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
-
-                            }
+                            String error = task.getException().getMessage();
+                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
 
                         }
-                    });
 
-            try {
-
-                long millisecond = homeFeedList.get(position).getTimestamp().getTime();
-                String dateString = DateFormat.format("dd/MM/yyyy", new Date(millisecond)).toString();
-                holder.setPostDate(dateString);
-            } catch (Exception e) {
-
-
-                Toast.makeText(context, "Exception : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-            }
-
-            //Get Likes Counts
-            firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes")
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                            if (!queryDocumentSnapshots.isEmpty()) {
-                                int count = queryDocumentSnapshots.size();
-
-                                holder.updateLikeCount(count);
-
-                            } else {
-
-                                holder.updateLikeCount(0);
-
-                            }
-                        }
-                    });
-
-            //Get Likes
-            firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId)
-                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-
-                            if (documentSnapshot.exists()) {
-
-                                holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.action_like_accent));
-                                holder.postLikeCount.setTextColor(ContextCompat.getColor(context, R.color.Like_Accent));
-
-                            } else {
-
-                                holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.action_like_gray));
-                                holder.postLikeCount.setTextColor(ContextCompat.getColor(context, R.color.Like_Gray));
-     
-
-                            }
-
-                        }
-                    });
-
-
-            //Likes Feature
-            holder.postLikeBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (firebaseAuth.getCurrentUser().isAnonymous()){
-                        Toast.makeText(context,"not Allowed",Toast.LENGTH_LONG).show();
                     }
+                });
+
+        try {
+
+            long millisecond = homeFeedList.get(position).getTimestamp().getTime();
+            String dateString = DateFormat.format("dd/MM/yyyy", new Date(millisecond)).toString();
+            holder.setPostDate(dateString);
+
+        } catch (Exception e) {
+
+            Toast.makeText(context, "Exception : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+        }
+
+        //Get Likes Counts
+        firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            int count = queryDocumentSnapshots.size();
+
+                            holder.updateLikeCount(count);
+
+                        } else {
+
+                            holder.updateLikeCount(0);
+
+                        }
+                    }
+                });
+
+        //Get Likes
+        firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                        if (documentSnapshot.exists()) {
+
+                            holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.action_like_accent));
+                            holder.postLikeCount.setTextColor(ContextCompat.getColor(context, R.color.Like_Accent));
+
+                        } else {
+
+                            holder.postLikeBtn.setImageDrawable(context.getDrawable(R.drawable.action_like_gray));
+                            holder.postLikeCount.setTextColor(ContextCompat.getColor(context, R.color.Like_Gray));
+
+
+                        }
+
+                    }
+                });
+
+
+        //Likes Feature
+        holder.postLikeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (firebaseAuth.getCurrentUser().isAnonymous()) {
+
+                    Toast.makeText(context, "Please login to access this functionality.", Toast.LENGTH_LONG).show();
+
+                } else {
 
                     firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).get()
                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -172,20 +172,28 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
                                         likesMap.put("timestamp", FieldValue.serverTimestamp());
 
                                         firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).set(likesMap);
-      
+                                        firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + homeFeedId
+                                                + "/Likes").document(currentUserId).set(likesMap);
+
                                     } else {
 
                                         firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).delete();
+                                        firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + homeFeedId
+                                                + "/Likes").document(currentUserId).delete();
 
                                     }
                                 }
                             });
 
                 }
-            });
 
-        }
+
+            }
+        });
+
+
     }
+
     @Override
     public int getItemCount() {
         return homeFeedList.size();

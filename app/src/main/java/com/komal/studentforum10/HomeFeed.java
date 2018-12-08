@@ -9,6 +9,16 @@ public class HomeFeed extends HomeFeedId {
     public String post_name;
     public String post_desc;
     public String user_id;
+
+    public String getPost_thread() {
+        return post_thread;
+    }
+
+    public void setPost_thread(String post_thread) {
+        this.post_thread = post_thread;
+    }
+
+    public String post_thread;
     public Date timestamp;
 
     public Date getTimestamp() {
@@ -23,11 +33,12 @@ public class HomeFeed extends HomeFeedId {
 
     }
 
-    public HomeFeed(String post_name, String post_desc, String user_id, Date timestamp) {
+    public HomeFeed(String post_name, String post_desc, String user_id, Date timestamp, String post_thread) {
         this.post_name = post_name;
         this.post_desc = post_desc;
         this.user_id = user_id;
         this.timestamp = timestamp;
+        this.post_thread = post_thread;
     }
 
     public String getPost_name() {
