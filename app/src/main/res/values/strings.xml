@@ -5,6 +5,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="default_notification_channel_id">Convo_CH_01</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

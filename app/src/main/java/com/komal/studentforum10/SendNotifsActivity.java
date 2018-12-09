@@ -57,8 +57,8 @@ public class SendNotifsActivity extends AppCompatActivity {
                     if(!TextUtils.isEmpty(notifMessageText)){
 
                         Map<String,Object> notifMap = new HashMap<>();
-                        notifMap.put("notif_message", notifMessageText);
-                        notifMap.put("from_user_id", user_id);
+                        notifMap.put("message", notifMessageText);
+                        notifMap.put("from", user_id);
 
                         firebaseFirestore.collection("Users").document(toUserId)
                                 .collection("Notifications").add(notifMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
