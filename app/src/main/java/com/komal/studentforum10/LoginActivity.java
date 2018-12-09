@@ -20,6 +20,11 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -30,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar login_progress;
     private Button forgotPasswordBtn;
     private Button guestLoginBtn;
+
+    FirebaseFirestore firebaseFirestore;
     FirebaseAuth.AuthStateListener authListener;
     FirebaseAuth mAuth;
 
@@ -49,6 +56,8 @@ public class LoginActivity extends AppCompatActivity {
         login_progress = (ProgressBar) findViewById(R.id.login_progress);
         forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn);
         guestLoginBtn = (Button) findViewById(R.id.guestLoginBtn);
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -93,9 +102,31 @@ public class LoginActivity extends AppCompatActivity {
 
                             if (task.isSuccessful()) {
 
-                                Intent mainIntent = new Intent(LoginActivity.this, StudentForum.class);
-                                startActivity(mainIntent);
-                                finish();
+                                String token_id = FirebaseInstanceId.getInstance().getToken();
+                                String current_user_id = mAuth.getCurrentUser().getUid();
+
+                                Map<String, Object> tokenMap = new HashMap<>();
+                                tokenMap.put("token_id", token_id);
+
+                                firebaseFirestore.collection("Users").document(current_user_id)
+                                        .update(tokenMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                        if(task.isSuccessful()){
+
+                                            Intent mainIntent = new Intent(LoginActivity.this, StudentForum.class);
+                                            startActivity(mainIntent);
+                                            finish();
+
+                                        } else {
+
+                                            String error = task.getException().getMessage();
+                                            Toast.makeText(LoginActivity.this, "Error: " + error, Toast.LENGTH_LONG).show();
+
+                                        }
+                                    }
+                                });
 
                             } else {
 

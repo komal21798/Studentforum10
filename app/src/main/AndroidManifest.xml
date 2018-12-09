@@ -37,7 +37,9 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ThreadActivity" />
         <activity android:name=".CommentsActivity" />
-        <activity android:name=".EventsRegistrationActivity"></activity>
+        <activity android:name=".EventsRegistrationActivity" />
+        <activity android:name=".NotifsActivity" />
+        <activity android:name=".SendNotifsActivity"></activity>
     </application>
 
 </manifest>

@@ -23,8 +23,14 @@ import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class StudentForum extends AppCompatActivity {
 
@@ -34,6 +40,10 @@ public class StudentForum extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private FirebaseUser firebaseUser;
+
+    private FirebaseFirestore firebaseFirestore;
+
+    private String user_id;
 
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
@@ -74,9 +84,12 @@ public class StudentForum extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_notifications:
-                    NotifsFragment notifsFragment = new NotifsFragment();
+
+                    Intent notifsIntent = new Intent(StudentForum.this, NotifsActivity.class);
+                    StudentForum.this.startActivity(notifsIntent);
+                    /*NotifsFragment notifsFragment = new NotifsFragment();
                     FragmentManager manager5 = getFragmentManager();
-                    manager5.beginTransaction().replace(R.id.contentLayout, notifsFragment, notifsFragment.getTag()).commit();
+                    manager5.beginTransaction().replace(R.id.contentLayout, notifsFragment, notifsFragment.getTag()).commit();*/
                     return true;
             }
             return false;
@@ -91,6 +104,10 @@ public class StudentForum extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         firebaseUser = mAuth.getCurrentUser();
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
+        user_id = mAuth.getCurrentUser().getUid();
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavView);
         BottomNavViewHelper.disableShiftMode(bottomNavigationView);
@@ -147,7 +164,6 @@ public class StudentForum extends AppCompatActivity {
         if (!firebaseUser.isAnonymous()) {
 
             if (!firebaseUser.isEmailVerified()) {
-
 
                 Toast.makeText(this, "Please verify your email to login.", Toast.LENGTH_LONG).show();
                 goToLogin();
@@ -238,9 +254,31 @@ public class StudentForum extends AppCompatActivity {
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    mAuth.signOut();
-                    goToLogin();
-                    finish();
+
+                    Map<String,Object> tokenMap = new HashMap<>();
+                    tokenMap.put("token_id", "");
+
+                    firebaseFirestore.collection("Users").document(user_id)
+                            .update(tokenMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            if(task.isSuccessful()){
+
+                                mAuth.signOut();
+                                goToLogin();
+                                finish();
+
+                            } else {
+
+                                String error = task.getException().getMessage();
+                                Toast.makeText(StudentForum.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    });
+
+
                 }
             });
 

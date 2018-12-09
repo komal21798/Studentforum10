@@ -48,7 +48,7 @@ public class ExploreFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater,final ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View v;
         v = inflater.inflate(R.layout.fragment_explore, container, false);
@@ -72,14 +72,14 @@ public class ExploreFragment extends Fragment {
 
                     Boolean reachedBottom = !recyclerView.canScrollVertically(1);
 
-                    if(reachedBottom){
+                    if (reachedBottom) {
                         loadMorePost();
                     }
                 }
             });
 
             Query firstQuery = firebaseFirestore.collection("Posts")
-                    .orderBy("timestamp",Query.Direction.DESCENDING)
+                    .orderBy("likes_count", Query.Direction.DESCENDING)
                     .limit(15);
 
             firstQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
@@ -87,9 +87,9 @@ public class ExploreFragment extends Fragment {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                    if(!queryDocumentSnapshots.isEmpty()) {
+                    if (!queryDocumentSnapshots.isEmpty()) {
 
-                        if(isFirstPageFirstLoaded) {
+                        if (isFirstPageFirstLoaded) {
 
                             // Get the last visible document
                             lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
@@ -128,10 +128,10 @@ public class ExploreFragment extends Fragment {
         return v;
     }
 
-    public void loadMorePost(){
+    public void loadMorePost() {
 
         Query nextQuery = firebaseFirestore.collection("Posts")
-                .orderBy("timestamp",Query.Direction.DESCENDING)
+                .orderBy("likes_count", Query.Direction.DESCENDING)
                 .startAfter(lastVisible)
                 .limit(15);
 
@@ -139,7 +139,7 @@ public class ExploreFragment extends Fragment {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                if(!queryDocumentSnapshots.isEmpty()) {
+                if (!queryDocumentSnapshots.isEmpty()) {
 
                     lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 
