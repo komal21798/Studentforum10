@@ -1,8 +1,10 @@
 package com.komal.studentforum10;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -109,6 +111,24 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
         }
 
+        //Get Comments Count
+        firebaseFirestore.collection("Posts/" + homeFeedId + "/Comments/")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            int count = queryDocumentSnapshots.size();
+
+                            holder.updateCommentCount(count);
+
+                        } else {
+
+                            holder.updateCommentCount(0);
+
+                        }
+                    }
+                });
+
         //Get Likes Counts
         firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -189,6 +209,20 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             }
         });
 
+        //going to comments activity
+        holder.postCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                    commentsIntent.putExtra("threadPageId", homeFeedId);
+                    context.startActivity(commentsIntent);
+
+
+
+            }
+        });
+
 
     }
 
@@ -206,6 +240,9 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
         private TextView postDate;
         private ImageView postLikeBtn;
         private TextView postLikeCount;
+        private TextView postCommentCount;
+        private CardView postCardView;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -214,6 +251,9 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             postLikeBtn = mView.findViewById(R.id.postLikeBtn);
             postLikeCount = mView.findViewById(R.id.postLikeCount);
 
+            postCommentCount = mView.findViewById(R.id.postCommentCount);
+
+            postCardView = mView.findViewById(R.id.postCardView);
         }
 
         public void setPostName(String postText) {
@@ -263,6 +303,10 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
         public void updateLikeCount(int count) {
             postLikeCount.setText(count + " "); //Space so no error while converting to string
+        }
+
+        public void updateCommentCount(int count) {
+            postCommentCount.setText(count + " "); //Space so no error while converting to string
         }
 
     }

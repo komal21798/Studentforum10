@@ -111,6 +111,24 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
         }
 
+        //Get Comments Count
+        firebaseFirestore.collection("/Posts/" + threadPageId + "/Comments")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            int count = queryDocumentSnapshots.size();
+
+                            holder.updateCommentCount(count);
+
+                        } else {
+
+                            holder.updateCommentCount(0);
+
+                        }
+                    }
+                });
+
 
         //Get Likes Counts
         firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes")
@@ -227,6 +245,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
         private TextView postLikeCount;
         private ImageButton postDelete;
         private CardView postCardView;
+        private TextView postCommentCount;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -235,6 +254,8 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
             postLikeBtn = mView.findViewById(R.id.postLikeBtn);
             postLikeCount = mView.findViewById(R.id.postLikeCount);
+
+            postCommentCount = mView.findViewById(R.id.postCommentCount);
 
             postDelete = mView.findViewById(R.id.delete_post);
 
@@ -271,6 +292,10 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
         public void updateLikeCount(int count) {
             postLikeCount.setText(count + " "); //Space so no error while converting to string
+        }
+
+        public void updateCommentCount(int count) {
+            postCommentCount.setText(count + " "); //Space so no error while converting to string
         }
 
     }
