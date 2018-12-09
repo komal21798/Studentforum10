@@ -20,10 +20,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 public class NewThreadFragment extends Fragment {
 
@@ -34,6 +39,8 @@ public class NewThreadFragment extends Fragment {
 
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
+
+    public String username;
 
     private String user_id;
 
@@ -90,8 +97,8 @@ public class NewThreadFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                String threadName = newThreadName.getText().toString();
-                String threadDesc = newThreadDesc.getText().toString();
+                final String threadName = newThreadName.getText().toString();
+                final String threadDesc = newThreadDesc.getText().toString();
 
                 if (firebaseAuth.getCurrentUser().isAnonymous()){
                     Toast.makeText(getActivity(),"First Login In",Toast.LENGTH_LONG).show();
@@ -101,29 +108,43 @@ public class NewThreadFragment extends Fragment {
 
                     newThreadProgress.setVisibility(View.VISIBLE);
 
-                    Map<String, Object> threadMap = new HashMap<>();
-                    threadMap.put("user_id", user_id);
-                    threadMap.put("thread_name", threadName);
-                    threadMap.put("thread_desc", threadDesc);
+                    firebaseFirestore.collection("Users").document(user_id)
+                            .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
-                    firebaseFirestore.collection("Threads").document(threadName).set(threadMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
+                                    username = documentSnapshot.getString("username");
 
-                            if(task.isSuccessful()){
+                                    Map<String, Object> threadMap = new HashMap<>();
+                                    threadMap.put("username", username);
+                                    threadMap.put("thread_name", threadName);
+                                    threadMap.put("thread_desc", threadDesc);
 
-                                Intent myIntent = new Intent(getActivity(), ThreadSubmittedActivity.class);
-                                startActivity(myIntent);
+                                    //submit thread to admin for approval
+                                    firebaseFirestore.collection("Users").document("M4S0hiNILmTuj1nEKp3NCGvfiiF2").collection("Inbox")
+                                            .document(threadName).set(threadMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
 
-                            } else{
+                                            if(task.isSuccessful()){
 
-                                String error = task.getException().getMessage();
-                                Toast.makeText(getActivity(), "Thread posting error:" + error, Toast.LENGTH_SHORT).show();
+                                                Intent myIntent = new Intent(getActivity(), ThreadSubmittedActivity.class);
+                                                startActivity(myIntent);
 
-                            }
+                                            } else{
 
-                        }
-                    });
+                                                String error = task.getException().getMessage();
+                                                Toast.makeText(getActivity(), "Thread posting error:" + error, Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        }
+                                    });
+
+
+                                }
+                            });
+
+
 
                 } else {
 

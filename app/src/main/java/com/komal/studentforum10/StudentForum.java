@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -109,6 +110,15 @@ public class StudentForum extends AppCompatActivity {
 
         user_id = mAuth.getCurrentUser().getUid();
 
+        final NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
+
+        //inbox for admin
+        if(!user_id.equals("M4S0hiNILmTuj1nEKp3NCGvfiiF2"))
+        {
+            Menu nav_menu = nav_view.getMenu();
+            nav_menu.findItem(R.id.inbox).setVisible(false);
+        }
+
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavView);
         BottomNavViewHelper.disableShiftMode(bottomNavigationView);
 
@@ -127,8 +137,6 @@ public class StudentForum extends AppCompatActivity {
         abdt.syncState();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        final NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
 
         //to check for internet connection
         if (!isConnected(StudentForum.this)) {
@@ -190,10 +198,15 @@ public class StudentForum extends AppCompatActivity {
 
                         logout();
 
+                    } else if(id == R.id.inbox) {
+
+                        inbox();
+
                     }
 
                     return true;
                 }
+
             });
         }
 
@@ -210,6 +223,13 @@ public class StudentForum extends AppCompatActivity {
         Intent loginIntent = new Intent(StudentForum.this, LoginActivity.class);
         startActivity(loginIntent);
         finish();
+
+    }
+
+    public void inbox() {
+
+        Intent inboxIntent = new Intent(StudentForum.this, InboxActivity.class);
+        startActivity(inboxIntent);
 
     }
 
