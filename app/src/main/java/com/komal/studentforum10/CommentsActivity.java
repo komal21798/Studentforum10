@@ -1,5 +1,6 @@
 package com.komal.studentforum10;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -89,6 +90,7 @@ public class CommentsActivity extends AppCompatActivity {
                 String comments_editext = commentsEditText.getText().toString();
 
                 if (!TextUtils.isEmpty(comments_editext)) {
+
                     Map<String, Object> commentsMap = new HashMap<>();
                     commentsMap.put("user_id", user_id);
                     commentsMap.put("comment", comments_editext);
@@ -96,7 +98,21 @@ public class CommentsActivity extends AppCompatActivity {
                     commentsMap.put("post_name", postId);
                     commentsMap.put("thread_name", CategoryId);
 
-                    firebaseFirestore.collection("Posts/" + postId + "/Comments").document().set(commentsMap);
+                    firebaseFirestore.collection("Posts/" + postId + "/Comments").document().set(commentsMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+
+                                Toast.makeText(CommentsActivity.this, "Comment posted successfully!", Toast.LENGTH_SHORT).show();
+
+                            } else {
+
+                                String error = task.getException().getMessage();
+                                Toast.makeText(CommentsActivity.this, "Error:" + error, Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    });
                     firebaseFirestore.collection("Threads/" + CategoryId + "/Posts/" + postId + "/Comments").document().set(commentsMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -144,7 +160,7 @@ public class CommentsActivity extends AppCompatActivity {
 
             //for loading comments
 
-            Query firstQuery = firebaseFirestore.collection("Threads/" + CategoryId + "/Posts/" + postId + "/Comments")
+            Query firstQuery = firebaseFirestore.collection("Posts/" + postId + "/Comments")
                     .orderBy("timestamp", Query.Direction.ASCENDING)
                     .limit(15);
 
@@ -195,9 +211,7 @@ public class CommentsActivity extends AppCompatActivity {
 
     public void loadMorePost() {
 
-        Query nextQuery = firebaseFirestore.collection("Threads")
-                .document(CategoryId)
-                .collection("Posts")
+        Query nextQuery = firebaseFirestore.collection("Posts")
                 .document(postId)
                 .collection("Comments")
                 .orderBy("timestamp", Query.Direction.ASCENDING)
