@@ -74,6 +74,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
         holder.setIsRecyclable(false);
 
         final String threadPageId = threadPageList.get(position).threadPageId;
+        final String threadPostDesc = threadPageList.get(position).getPost_desc();
         final String currentUserId = firebaseAuth.getCurrentUser().getUid();
         final String postThread = threadPageList.get(position).getPost_thread();
 
@@ -227,6 +228,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
                     Intent commentsIntent = new Intent(context, CommentsActivity.class);
                     commentsIntent.putExtra("threadPageId", threadPageId);
+                    commentsIntent.putExtra("postDesc",threadPostDesc);
                     context.startActivity(commentsIntent);
 
                 }

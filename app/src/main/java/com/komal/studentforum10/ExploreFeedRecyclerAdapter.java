@@ -73,9 +73,11 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
         holder.setIsRecyclable(false);
 
         final String exploreFeedId = exploreFeedList.get(position).exploreFeedId;
+        final String explorePostDesc = exploreFeedList.get(position).getPost_desc();
         final String currentUserId = firebaseAuth.getCurrentUser().getUid();
 
         final String postThread = exploreFeedList.get(position).getPost_thread();
+
 
         final int likes_count = exploreFeedList.get(position).getLikes_count();
 
@@ -224,6 +226,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
                     Intent commentsIntent = new Intent(context, CommentsActivity.class);
                     commentsIntent.putExtra("threadPageId", exploreFeedId);
+                    commentsIntent.putExtra("postDesc", explorePostDesc);
                     context.startActivity(commentsIntent);
 
                 }

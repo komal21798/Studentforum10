@@ -77,7 +77,9 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
         final String postThread = homeFeedList.get(position).getPost_thread();
 
-        String postName = homeFeedList.get(position).getPost_name();
+        final String postDesc = homeFeedList.get(position).getPost_desc();
+
+        final String postName = homeFeedList.get(position).getPost_name();
         holder.setPostName(postName);
 
         final String user_id = homeFeedList.get(position).getUser_id();
@@ -232,6 +234,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
                     Intent commentsIntent = new Intent(context, CommentsActivity.class);
                     commentsIntent.putExtra("threadPageId", homeFeedId);
+                    commentsIntent.putExtra("postDesc",postDesc);
                     context.startActivity(commentsIntent);
 
                 }

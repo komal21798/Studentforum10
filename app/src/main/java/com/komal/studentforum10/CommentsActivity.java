@@ -41,6 +41,9 @@ public class CommentsActivity extends AppCompatActivity {
     private ImageView addCommentButton;
     private EditText commentsEditText;
 
+    private TextView commentPostName;
+    private TextView commentPostDesc;
+
     private RecyclerView commentsPageView;
     private List<CommentsFeed> commentsPageList;
 
@@ -51,6 +54,7 @@ public class CommentsActivity extends AppCompatActivity {
 
     public static String postId;
     public static String CategoryId;
+    public static String postDesc;
     private String user_id;
 
     private DocumentSnapshot lastVisible;
@@ -66,6 +70,12 @@ public class CommentsActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         postId = bundle.getString("threadPageId");
         CategoryId = bundle.getString("postThreadId");
+        postDesc = bundle.getString("postDesc");
+
+        commentPostName = findViewById(R.id.commentPostName);
+        commentPostName.setText(postId);
+        commentPostDesc = findViewById(R.id.commentPostDesc);
+        commentPostDesc.setText(postDesc);
 
         addCommentButton = findViewById(R.id.addCommentButton);
         commentsEditText = findViewById(R.id.commentsEditText);
