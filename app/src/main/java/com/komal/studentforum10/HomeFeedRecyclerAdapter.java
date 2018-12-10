@@ -1,16 +1,21 @@
 package com.komal.studentforum10;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -216,12 +221,63 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             @Override
             public void onClick(View v) {
 
-                    Intent commentsIntent = new Intent(context, CommentsActivity.class);
-                    commentsIntent.putExtra("threadPageId", homeFeedId);
-                    context.startActivity(commentsIntent);
+                Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                commentsIntent.putExtra("threadPageId", homeFeedId);
+                context.startActivity(commentsIntent);
+
+            }
+        });
+
+        //for showing delete/report popup menu
+        if (!currentUserId.equals("M4S0hiNILmTuj1nEKp3NCGvfiiF2")) {
+            holder.deleteReportPost.setVisibility(View.INVISIBLE);
+        }
+
+        //deleting posts
+        holder.deleteReportPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(context, v);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.popupactions, popup.getMenu());
+                popup.show();
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        boolean choice;
+
+                        if (item.getTitle().equals("Delete")) {
+
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setMessage(" Are you sure you want to delete the post?");
+                            builder.setCancelable(true);
+                            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    firebaseFirestore.collection("Posts").document(homeFeedId).delete();
+                                    firebaseFirestore.collection("Threads/" + postThread + "/Posts/").document(homeFeedId).delete();
+                                    removeAt(holder.getAdapterPosition());
+                                    notifyDataSetChanged();
+                                }
+                            });
+
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
 
 
-
+                        }
+                        return true;
+                    }
+                });
             }
         });
 
@@ -244,6 +300,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
         private TextView postLikeCount;
         private TextView postCommentCount;
         private CardView postCardView;
+        private ImageView deleteReportPost;
 
 
         public ViewHolder(View itemView) {
@@ -256,6 +313,8 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             postCommentCount = mView.findViewById(R.id.postCommentCount);
 
             postCardView = mView.findViewById(R.id.postCardView);
+
+            deleteReportPost = mView.findViewById(R.id.deleteReportPost);
         }
 
         public void setPostName(String postText) {
@@ -311,5 +370,12 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             postCommentCount.setText(count + " "); //Space so no error while converting to string
         }
 
+    }
+
+    //removing deleted posts from recycler view
+    public void removeAt(int position) {
+        homeFeedList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, homeFeedList.size());
     }
 }

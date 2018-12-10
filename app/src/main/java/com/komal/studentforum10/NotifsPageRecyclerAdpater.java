@@ -68,6 +68,8 @@ public class NotifsPageRecyclerAdpater extends RecyclerView.Adapter<NotifsPageRe
             }
         });
 
+
+
     }
 
     @Override
