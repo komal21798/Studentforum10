@@ -129,7 +129,6 @@ public class NewPostFragment extends Fragment {
 
                     int position;
 
-
                     if (!TextUtils.isEmpty(post_desc) && !TextUtils.isEmpty(post_name) && !TextUtils.isEmpty(post_thread)) {
 
                         newPostProgress.setVisibility(View.VISIBLE);

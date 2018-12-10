@@ -2,21 +2,16 @@ package com.komal.studentforum10;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -213,11 +208,20 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             @Override
             public void onClick(View v) {
 
-                Intent commentsIntent = new Intent(context, CommentsActivity.class);
-                commentsIntent.putExtra("threadPageId", exploreFeedId);
-                context.startActivity(commentsIntent);
 
+                if (postThread.equals("Register")) {
 
+                    Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
+                    registerIntent.putExtra("threadPageId", exploreFeedId);
+                    context.startActivity(registerIntent);
+
+                } else {
+
+                    Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                    commentsIntent.putExtra("threadPageId", exploreFeedId);
+                    context.startActivity(commentsIntent);
+
+                }
 
             }
         });
@@ -228,53 +232,11 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             holder.deleteReportPost.setVisibility(View.INVISIBLE);
         }
 
-        //for deleteing posts
-        holder.deleteReportPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(context, v);
-                MenuInflater inflater = popup.getMenuInflater();
-                inflater.inflate(R.menu.popupactions, popup.getMenu());
-                popup.show();
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-
-                        boolean choice;
-
-                        if (item.getTitle().equals("Delete")) {
-
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setMessage(" Are you sure you want to delete the post?");
-                            builder.setCancelable(true);
-                            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    firebaseFirestore.collection("Posts").document(exploreFeedId).delete();
-                                    firebaseFirestore.collection("Threads/" + postThread + "/Posts/").document(exploreFeedId).delete();
-                                    removeAt(holder.getAdapterPosition());
-                                    notifyDataSetChanged();
-                                }
-                            });
-
-                            AlertDialog alertDialog = builder.create();
-                            alertDialog.show();
-
-
-                        }
-                        return true;
-                    }
-                });
-            }
-        });
+        //To not show comments on Registration Posts
+        if(postThread.equals("Register")) {
+            holder.postCommentBtn.setVisibility(View.INVISIBLE);
+            holder.postCommentCount.setVisibility(View.INVISIBLE);
+        }
 
 
     }
@@ -294,6 +256,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
         private ImageView postLikeBtn;
         private TextView postLikeCount;
         private TextView postCommentCount;
+        private ImageView postCommentBtn;
         private CardView postCardView;
         private ImageView deleteReportPost;
 
@@ -306,6 +269,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             postLikeCount = mView.findViewById(R.id.postLikeCount);
 
             postCommentCount = mView.findViewById(R.id.postCommentCount);
+            postCommentBtn = mView.findViewById(R.id.postCommentBtn);
 
             postCardView = mView.findViewById(R.id.postCardView);
 
@@ -350,13 +314,6 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             postCommentCount.setText(count + " "); //Space so no error while converting to string
         }
 
-    }
-
-    //removing deleted posts from recycler view
-    public void removeAt(int position) {
-        exploreFeedList.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, exploreFeedList.size());
     }
 }
 
