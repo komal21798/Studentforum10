@@ -1,6 +1,7 @@
 package com.komal.studentforum10;
 
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -57,12 +58,16 @@ public class ThreadActivity extends AppCompatActivity {
     private String user_id;
     private int subscribersCount;
 
+    private ActionBar actionBar;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thread);
 
+        actionBar = getSupportActionBar();
+        actionBar.hide();
 
         //Get categoryId from previous activity i.e. category fragment
         Bundle bundle = getIntent().getExtras();

@@ -61,6 +61,7 @@ public class AccountSetupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_setup);
+        setTitle("My Profile");
 
         setup_profile_pic = findViewById(R.id.setup_profile_pic);
         setup_name = findViewById(R.id.setup_username);

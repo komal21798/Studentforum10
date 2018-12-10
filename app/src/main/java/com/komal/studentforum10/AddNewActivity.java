@@ -32,6 +32,7 @@ public class AddNewActivity extends AppCompatActivity implements NewPostFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new);
+        setTitle("Add New");
 
         TabLayout tabLayout = (TabLayout)findViewById(R.id.tabLayout);
 

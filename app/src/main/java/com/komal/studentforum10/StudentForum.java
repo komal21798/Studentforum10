@@ -59,12 +59,14 @@ public class StudentForum extends AppCompatActivity {
                     HomeFragment homeFragment = new HomeFragment();
                     FragmentManager manager1 = getFragmentManager();
                     manager1.beginTransaction().replace(R.id.contentLayout, homeFragment, homeFragment.getTag()).commit();
+                    setTitle("Home");
                     return true;
 
                 case R.id.navigation_explore:
                     ExploreFragment exploreFragment = new ExploreFragment();
                     FragmentManager manager2 = getFragmentManager();
                     manager2.beginTransaction().replace(R.id.contentLayout, exploreFragment, exploreFragment.getTag()).commit();
+                    setTitle("Explore");
                     return true;
 
                 case R.id.navigation_addNew:
@@ -76,15 +78,13 @@ public class StudentForum extends AppCompatActivity {
                     CategoriesFragment categoriesFragment = new CategoriesFragment();
                     FragmentManager manager4 = getFragmentManager();
                     manager4.beginTransaction().replace(R.id.contentLayout, categoriesFragment, categoriesFragment.getTag()).commit();
+                    setTitle("Categories");
                     return true;
 
                 case R.id.navigation_notifications:
 
                     Intent notifsIntent = new Intent(StudentForum.this, NotifsActivity.class);
                     StudentForum.this.startActivity(notifsIntent);
-                    /*NotifsFragment notifsFragment = new NotifsFragment();
-                    FragmentManager manager5 = getFragmentManager();
-                    manager5.beginTransaction().replace(R.id.contentLayout, notifsFragment, notifsFragment.getTag()).commit();*/
                     return true;
             }
             return false;
