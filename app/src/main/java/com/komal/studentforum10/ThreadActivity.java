@@ -35,10 +35,8 @@ import javax.annotation.Nullable;
 public class ThreadActivity extends AppCompatActivity {
 
     private TextView threadName;
-    private TextView threadSubscribers;
+
     private TextView threadDesc;
-    private Button subscribeBtn;
-    private Button unsubscribeBtn;
 
     private RecyclerView threadPageView;
     private List<ThreadPage> threadPageList;
@@ -73,9 +71,7 @@ public class ThreadActivity extends AppCompatActivity {
 
         threadName = findViewById(R.id.threadName);
         threadName.setText(CategoryId);
-        threadSubscribers = findViewById(R.id.threadSubscribers);
-        subscribeBtn = findViewById(R.id.subscribeBtn);
-        unsubscribeBtn = findViewById(R.id.unsubscribeBtn);
+
         threadDesc = findViewById(R.id.threadDesc);
 
         threadDesc.setText(CategoryDesc);
@@ -102,91 +98,6 @@ public class ThreadActivity extends AppCompatActivity {
 
 
 
-        {
-
-
-            firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
-                    .document(user_id)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-
-                            if (!task.getResult().exists()) {
-
-                                subscribeBtn.setVisibility(View.VISIBLE);
-
-                            } else {
-
-                                unsubscribeBtn.setVisibility(View.VISIBLE);
-
-                            }
-
-                        }
-                    });
-
-            //showing the subscribe or unsubscribe button
-            firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers").document(user_id)
-                    .addSnapshotListener(ThreadActivity.this, new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-
-                            if (documentSnapshot.exists()) {
-
-                                unsubscribeBtn.setVisibility(View.VISIBLE);
-
-                            } else {
-
-                                subscribeBtn.setVisibility(View.VISIBLE);
-
-                            }
-                        }
-                    });
-
-            //subscribing
-            subscribeBtn.setOnClickListener(new View.OnClickListener() {
-
-
-                @Override
-                public void onClick(View v) {
-
-
-                    subscribeBtn.setVisibility(View.INVISIBLE);
-
-                    Map<String, Object> subscribeMap = new HashMap<>();
-                    subscribeMap.put("timestamp", FieldValue.serverTimestamp());
-
-                    firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
-                            .document(user_id).set(subscribeMap);
-
-                    firebaseFirestore.collection("Users/" + user_id + "/Subs")
-                            .document(CategoryId).set(subscribeMap);
-
-                }
-            });
-
-
-            //unsubscribing
-            unsubscribeBtn.setOnClickListener(new View.OnClickListener() {
-
-
-                @Override
-                public void onClick(View v) {
-
-                    unsubscribeBtn.setVisibility(View.INVISIBLE);
-
-                    firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
-                            .document(user_id).delete();
-
-                    firebaseFirestore.collection("Users/" + user_id + "/Subs")
-                            .document(CategoryId).delete();
-
-                }
-            });
-
-        }
-
     //for loading the posts
 
         if (firebaseAuth.getCurrentUser() != null) {
@@ -205,29 +116,6 @@ public class ThreadActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-        //for getting the number of subscribers
-        firebaseFirestore.collection("Threads/" + CategoryId + "/Subscribers")
-                .addSnapshotListener(ThreadActivity.this, new EventListener<QuerySnapshot>() {
-
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-
-                        if (!queryDocumentSnapshots.isEmpty()) {
-
-                            subscribersCount = queryDocumentSnapshots.size();
-
-                        } else {
-
-                            subscribersCount = 0;
-
-                        }
-
-                        //setting the subscribers count
-                        threadSubscribers.setText(subscribersCount + " subscribers");
-                    }
-                });
 
 
 
