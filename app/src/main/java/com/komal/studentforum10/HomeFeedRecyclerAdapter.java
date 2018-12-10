@@ -224,21 +224,27 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             @Override
             public void onClick(View v) {
 
-                if (postThread.equals("Register")) {
+                if (firebaseAuth.getCurrentUser().isAnonymous()) {
 
-                    Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
-                    registerIntent.putExtra("threadPageId", homeFeedId);
-                    context.startActivity(registerIntent);
+                    Toast.makeText(context, "Please login to access this functionality.", Toast.LENGTH_LONG).show();
 
                 } else {
 
-                    Intent commentsIntent = new Intent(context, CommentsActivity.class);
-                    commentsIntent.putExtra("threadPageId", homeFeedId);
-                    commentsIntent.putExtra("postDesc",postDesc);
-                    context.startActivity(commentsIntent);
+                    if (postThread.equals("Register")) {
 
+                        Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
+                        registerIntent.putExtra("threadPageId", homeFeedId);
+                        context.startActivity(registerIntent);
+
+                    } else {
+
+                        Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                        commentsIntent.putExtra("threadPageId", homeFeedId);
+                        commentsIntent.putExtra("postDesc", postDesc);
+                        context.startActivity(commentsIntent);
+
+                    }
                 }
-
             }
         });
 

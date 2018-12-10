@@ -184,29 +184,35 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             @Override
             public void onClick(View view) {
 
-                firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (firebaseAuth.getCurrentUser().isAnonymous()) {
 
-                        if (!task.getResult().exists()) {
-                            Map<String, Object> likesMap = new HashMap<>();
-                            likesMap.put("timestamp", FieldValue.serverTimestamp());
+                    Toast.makeText(context, "Please login to access this functionality.", Toast.LENGTH_LONG).show();
 
-                            firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).set(likesMap);
-                            firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + exploreFeedId
-                                    + "/Likes").document(currentUserId).set(likesMap);
+                } else {
+
+                    firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                            if (!task.getResult().exists()) {
+                                Map<String, Object> likesMap = new HashMap<>();
+                                likesMap.put("timestamp", FieldValue.serverTimestamp());
+
+                                firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).set(likesMap);
+                                firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + exploreFeedId
+                                        + "/Likes").document(currentUserId).set(likesMap);
 
 
-                        } else {
+                            } else {
 
-                            firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).delete();
-                            firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + exploreFeedId
-                                    + "/Likes").document(currentUserId).delete();
+                                firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).delete();
+                                firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + exploreFeedId
+                                        + "/Likes").document(currentUserId).delete();
 
+                            }
                         }
-                    }
-                });
-
+                    });
+                }
             }
         });
 
@@ -215,22 +221,27 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             @Override
             public void onClick(View v) {
 
+                if (firebaseAuth.getCurrentUser().isAnonymous()) {
 
-                if (postThread.equals("Register")) {
-
-                    Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
-                    registerIntent.putExtra("threadPageId", exploreFeedId);
-                    context.startActivity(registerIntent);
+                    Toast.makeText(context, "Please login to access this functionality.", Toast.LENGTH_LONG).show();
 
                 } else {
 
-                    Intent commentsIntent = new Intent(context, CommentsActivity.class);
-                    commentsIntent.putExtra("threadPageId", exploreFeedId);
-                    commentsIntent.putExtra("postDesc", explorePostDesc);
-                    context.startActivity(commentsIntent);
+                    if (postThread.equals("Register")) {
 
+                        Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
+                        registerIntent.putExtra("threadPageId", exploreFeedId);
+                        context.startActivity(registerIntent);
+
+                    } else {
+
+                        Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                        commentsIntent.putExtra("threadPageId", exploreFeedId);
+                        commentsIntent.putExtra("postDesc", explorePostDesc);
+                        context.startActivity(commentsIntent);
+
+                    }
                 }
-
             }
         });
 
