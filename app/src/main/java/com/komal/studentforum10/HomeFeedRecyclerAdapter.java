@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.common.api.internal.ListenerHolder;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -68,7 +69,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
         final String homeFeedId = homeFeedList.get(position).homeFeedId;
         final String currentUserId = firebaseAuth.getCurrentUser().getUid();
 
-        //final String postThread = homeFeedList.get(position).getPost_thread();
+        final String postThread = homeFeedList.get(position).getPost_thread();
 
         String postName = homeFeedList.get(position).getPost_name();
         holder.setPostName(postName);
@@ -191,13 +192,14 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
                                         likesMap.put("timestamp", FieldValue.serverTimestamp());
 
                                         firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).set(likesMap);
-                                        //firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + homeFeedId
-                                        //+ "/Likes").document(currentUserId).set(likesMap);
+                                        firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + homeFeedId
+                                                + "/Likes").document(currentUserId).set(likesMap);
 
                                     } else {
 
                                         firebaseFirestore.collection("Posts/" + homeFeedId + "/Likes").document(currentUserId).delete();
-                                        //firebaseFirestore.collection("Threads/" + postThread)
+                                        firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + homeFeedId +
+                                                "/Likes").document(currentUserId).delete();
 
                                     }
                                 }
@@ -280,7 +282,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             Glide.with(context).applyDefaultRequestOptions(placeholderOption).load(postUserimageText).into(postUserimage);
         }
 
-        public void setUserData(String name, String image){
+        public void setUserData(String name, String image) {
 
             postUsername = mView.findViewById(R.id.postUsername);
             postUserimage = mView.findViewById(R.id.postUserImage);

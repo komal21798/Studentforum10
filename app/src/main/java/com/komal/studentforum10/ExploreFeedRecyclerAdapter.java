@@ -71,6 +71,8 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
         final String postThread = exploreFeedList.get(position).getPost_thread();
 
+        final int likes_count = exploreFeedList.get(position).getLikes_count();
+
         String postNameData = exploreFeedList.get(position).getPost_name();
         holder.setPostName(postNameData);
 
@@ -78,28 +80,28 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
         firebaseFirestore.collection("Users").document(user_id).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                String postUsername;
-                String postUserimage;
-                if (task.isSuccessful()) {
+                        String postUsername;
+                        String postUserimage;
+                        if (task.isSuccessful()) {
 
-                    postUsername = task.getResult().getString("username");
-                    postUserimage = task.getResult().getString("profile_image");
+                            postUsername = task.getResult().getString("username");
+                            postUserimage = task.getResult().getString("profile_image");
 
-                    holder.setUsername(postUsername);
-                    holder.setUserimage(postUserimage);
+                            holder.setUsername(postUsername);
+                            holder.setUserimage(postUserimage);
 
-                } else {
+                        } else {
 
-                    String error = task.getException().getMessage();
-                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                            String error = task.getException().getMessage();
+                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
 
-                }
+                        }
 
-            }
-        });
+                    }
+                });
 
         try {
 
@@ -149,11 +151,6 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
                     }
                 });
 
-        /*if(count != 0)
-        {
-            exploreFeedList.get(position).setLikes_count(count);
-        }*/
-
 
         //Get Likes
 
@@ -188,14 +185,15 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
                             likesMap.put("timestamp", FieldValue.serverTimestamp());
 
                             firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).set(likesMap);
-                            /*firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + exploreFeedId
-                                    + "/Likes").document(currentUserId).set(likesMap);*/
+                            firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + exploreFeedId
+                                    + "/Likes").document(currentUserId).set(likesMap);
+
 
                         } else {
 
                             firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes").document(currentUserId).delete();
-                            /*firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + exploreFeedId
-                                    + "/Likes").document(currentUserId).delete();*/
+                            firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + exploreFeedId
+                                    + "/Likes").document(currentUserId).delete();
 
                         }
                     }

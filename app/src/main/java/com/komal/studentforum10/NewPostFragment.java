@@ -126,6 +126,7 @@ public class NewPostFragment extends Fragment {
                     String post_thread = newPostThread.getText().toString();
                     String post_name = newPostName.getText().toString();
                     String post_desc = newPostDesc.getText().toString();
+                    int likes_count = 0;
 
 
                     if (!TextUtils.isEmpty(post_desc) && !TextUtils.isEmpty(post_name) && !TextUtils.isEmpty(post_thread)) {
@@ -138,6 +139,7 @@ public class NewPostFragment extends Fragment {
                         postMap.put("post_name", post_name);
                         postMap.put("post_desc", post_desc);
                         postMap.put("timestamp", FieldValue.serverTimestamp());
+                        postMap.put("likes_count", likes_count);
 
                         firebaseFirestore.collection("Posts").document(post_name).set(postMap);
 

@@ -12,6 +12,11 @@
         android:title="Settings" />
 
     <item
+        android:id="@+id/inbox"
+        android:icon="@drawable/ic_email_black_24dp"
+        android:title="Inbox" />
+
+    <item
         android:id="@+id/logout"
         android:icon="@drawable/ic_power_settings_new_black_24dp"
         android:title="Logout" />

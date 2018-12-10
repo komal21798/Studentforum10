@@ -24,7 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="63dp"
         android:layout_marginTop="21dp"
-        android:text="Your thread is now live!"
+        android:text="Your thread has been submitted to the admin for approval!"
         android:textAlignment="center"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"

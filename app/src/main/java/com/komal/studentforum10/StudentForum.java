@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,8 +24,14 @@ import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class StudentForum extends AppCompatActivity {
 
@@ -34,6 +41,10 @@ public class StudentForum extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private FirebaseUser firebaseUser;
+
+    private FirebaseFirestore firebaseFirestore;
+
+    private String user_id;
 
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
@@ -74,9 +85,12 @@ public class StudentForum extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_notifications:
-                    NotifsFragment notifsFragment = new NotifsFragment();
+
+                    Intent notifsIntent = new Intent(StudentForum.this, NotifsActivity.class);
+                    StudentForum.this.startActivity(notifsIntent);
+                    /*NotifsFragment notifsFragment = new NotifsFragment();
                     FragmentManager manager5 = getFragmentManager();
-                    manager5.beginTransaction().replace(R.id.contentLayout, notifsFragment, notifsFragment.getTag()).commit();
+                    manager5.beginTransaction().replace(R.id.contentLayout, notifsFragment, notifsFragment.getTag()).commit();*/
                     return true;
             }
             return false;
@@ -91,6 +105,19 @@ public class StudentForum extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         firebaseUser = mAuth.getCurrentUser();
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
+        user_id = mAuth.getCurrentUser().getUid();
+
+        final NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
+
+        //inbox for admin
+        if(!user_id.equals("M4S0hiNILmTuj1nEKp3NCGvfiiF2"))
+        {
+            Menu nav_menu = nav_view.getMenu();
+            nav_menu.findItem(R.id.inbox).setVisible(false);
+        }
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavView);
         BottomNavViewHelper.disableShiftMode(bottomNavigationView);
@@ -110,8 +137,6 @@ public class StudentForum extends AppCompatActivity {
         abdt.syncState();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        final NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
 
         //to check for internet connection
         if (!isConnected(StudentForum.this)) {
@@ -148,7 +173,6 @@ public class StudentForum extends AppCompatActivity {
 
             if (!firebaseUser.isEmailVerified()) {
 
-
                 Toast.makeText(this, "Please verify your email to login.", Toast.LENGTH_LONG).show();
                 goToLogin();
 
@@ -174,10 +198,15 @@ public class StudentForum extends AppCompatActivity {
 
                         logout();
 
+                    } else if(id == R.id.inbox) {
+
+                        inbox();
+
                     }
 
                     return true;
                 }
+
             });
         }
 
@@ -194,6 +223,13 @@ public class StudentForum extends AppCompatActivity {
         Intent loginIntent = new Intent(StudentForum.this, LoginActivity.class);
         startActivity(loginIntent);
         finish();
+
+    }
+
+    public void inbox() {
+
+        Intent inboxIntent = new Intent(StudentForum.this, InboxActivity.class);
+        startActivity(inboxIntent);
 
     }
 
@@ -238,9 +274,31 @@ public class StudentForum extends AppCompatActivity {
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    mAuth.signOut();
-                    goToLogin();
-                    finish();
+
+                    Map<String,Object> tokenMap = new HashMap<>();
+                    tokenMap.put("token_id", "");
+
+                    firebaseFirestore.collection("Users").document(user_id)
+                            .update(tokenMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            if(task.isSuccessful()){
+
+                                mAuth.signOut();
+                                goToLogin();
+                                finish();
+
+                            } else {
+
+                                String error = task.getException().getMessage();
+                                Toast.makeText(StudentForum.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    });
+
+
                 }
             });
 
