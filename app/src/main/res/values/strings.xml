@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Student forum 1.0</string>
+    <string name="app_name">Convo</string>
     <string name="title_activity_home">Home</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
