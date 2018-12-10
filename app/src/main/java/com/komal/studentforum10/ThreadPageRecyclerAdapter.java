@@ -227,6 +227,12 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
             }
         });
+
+        //for showing delete/report popup menu
+        if(!currentUserId.equals("M4S0hiNILmTuj1nEKp3NCGvfiiF2"))
+        {
+            holder.deleteReportPost.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -246,6 +252,8 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
         private ImageButton postDelete;
         private CardView postCardView;
         private TextView postCommentCount;
+        private ImageView deleteReportPost;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -260,6 +268,8 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
             postDelete = mView.findViewById(R.id.delete_post);
 
             postCardView = mView.findViewById(R.id.postCardView);
+
+            deleteReportPost = mView.findViewById(R.id.deleteReportPost);
         }
 
         public void setPostName(String postText) {

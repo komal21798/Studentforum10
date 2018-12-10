@@ -225,6 +225,12 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             }
         });
 
+        //for showing delete/report popup menu
+        if(!currentUserId.equals("M4S0hiNILmTuj1nEKp3NCGvfiiF2"))
+        {
+            holder.deleteReportPost.setVisibility(View.INVISIBLE);
+        }
+
 
     }
 
@@ -244,6 +250,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
         private TextView postLikeCount;
         private TextView postCommentCount;
         private CardView postCardView;
+        private ImageView deleteReportPost;
 
 
         public ViewHolder(View itemView) {
@@ -256,6 +263,8 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             postCommentCount = mView.findViewById(R.id.postCommentCount);
 
             postCardView = mView.findViewById(R.id.postCardView);
+
+            deleteReportPost = mView.findViewById(R.id.deleteReportPost);
         }
 
         public void setPostName(String postText) {

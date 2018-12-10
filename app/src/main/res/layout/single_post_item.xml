@@ -23,7 +23,7 @@
             android:layout_height="wrap_content">
 
             <ImageButton
-                android:id="@+id/deletePost"
+                android:id="@+id/deleteReportPost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/transparent"
