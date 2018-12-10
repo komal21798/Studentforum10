@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:action="http://schemas.android.com/apk/res-auto"
     package="com.komal.studentforum10">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
@@ -52,7 +53,12 @@
             android:value="@string/default_notification_channel_id" />
 
         <activity android:name=".InboxActivity" />
-        <activity android:name=".NotifsInboxActivity"></activity>
+        <activity android:name=".NotifsInboxActivity">
+            <intent-filter>
+                <action android:name="com.komal.studentforum10.firebasepushnotif"/>
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
