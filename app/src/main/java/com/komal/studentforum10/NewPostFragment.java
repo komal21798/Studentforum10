@@ -119,7 +119,7 @@ public class NewPostFragment extends Fragment {
 
                 if (firebaseAuth.getCurrentUser().isAnonymous()) {
 
-                    Toast.makeText(getActivity(), "Please login to access this functiomalit", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Please login to access this functionality", Toast.LENGTH_LONG).show();
 
                 } else {
 

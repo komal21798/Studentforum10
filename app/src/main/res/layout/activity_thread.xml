@@ -20,62 +20,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/threadSubscribers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_marginStart="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/threadName" />
-
-    <TextView
         android:id="@+id/threadDesc"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/threadSubscribers" />
-
-    <Button
-        android:id="@+id/subscribeBtn"
-        android:layout_width="97dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:layout_weight="1"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/colorPrimary"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:text="Subscribe"
-        android:textColor="#ffffff"
-        android:textSize="12sp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/unsubscribeBtn"
-        android:layout_width="97dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:layout_weight="1"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/colorAccent"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:text="Unsubscribe"
-        android:textColor="#ffffff"
-        android:textSize="12sp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/threadName" />
 
     <View
         android:id="@+id/divider"
