@@ -1,5 +1,6 @@
 package com.komal.studentforum10;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -118,7 +119,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
         //Get Comments Count
         firebaseFirestore.collection("/Posts/" + threadPageId + "/Comments")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                .addSnapshotListener((Activity) context, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         if (!queryDocumentSnapshots.isEmpty()) {
@@ -137,7 +138,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
         //Get Likes Counts
         firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                .addSnapshotListener((Activity) context, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         if (!queryDocumentSnapshots.isEmpty()) {
@@ -154,7 +155,8 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
                 });
 
         //Get Likes
-        firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes")
+                .document(currentUserId).addSnapshotListener((Activity) context,new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
