@@ -248,10 +248,11 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             holder.deleteReportPost.setVisibility(View.INVISIBLE);
         }
 
-        //To not show comments on Registration Posts
+        //To not show comments on Registration Posts and show Registration Icon
         if(postThread.equals("Register")) {
             holder.postCommentBtn.setVisibility(View.INVISIBLE);
             holder.postCommentCount.setVisibility(View.INVISIBLE);
+            holder.postRegistrationView.setVisibility(View.VISIBLE);
         }
 
         //deleting posts
@@ -312,6 +313,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
         private TextView postLikeCount;
         private TextView postCommentCount;
         private ImageView postCommentBtn;
+        private ImageView postRegistrationView;
         private CardView postCardView;
         private ImageView deleteReportPost;
 
@@ -325,6 +327,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
 
             postCommentCount = mView.findViewById(R.id.postCommentCount);
             postCommentBtn = mView.findViewById(R.id.postCommentBtn);
+            postRegistrationView = mView.findViewById(R.id.postRegistrationView);
 
             postCardView = mView.findViewById(R.id.postCardView);
 
