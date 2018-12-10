@@ -83,7 +83,12 @@ public class StudentForum extends AppCompatActivity {
 
                 case R.id.navigation_notifications:
 
-                    Intent notifsIntent = new Intent(StudentForum.this, NotifsActivity.class);
+                    Intent notifsIntent;
+                    if(user_id.equals("M4S0hiNILmTuj1nEKp3NCGvfiiF2")){
+                        notifsIntent = new Intent(StudentForum.this, NotifsActivity.class);
+                    } else {
+                        notifsIntent = new Intent(StudentForum.this, NotifsInboxActivity.class);
+                    }
                     StudentForum.this.startActivity(notifsIntent);
                     return true;
             }
