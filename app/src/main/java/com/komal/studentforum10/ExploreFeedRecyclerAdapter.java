@@ -294,7 +294,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
         private TextView postLikeCount;
         private TextView postCommentCount;
         private CardView postCardView;
-        private TextView deleteReportPost;
+        private ImageView deleteReportPost;
 
         public ViewHolder(View itemView) {
             super(itemView);
