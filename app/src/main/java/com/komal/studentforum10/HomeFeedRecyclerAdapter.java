@@ -74,7 +74,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
         String postName = homeFeedList.get(position).getPost_name();
         holder.setPostName(postName);
 
-        String user_id = homeFeedList.get(position).getUser_id();
+        final String user_id = homeFeedList.get(position).getUser_id();
 
         firebaseFirestore.collection("Users").document(user_id).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -216,11 +216,19 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             @Override
             public void onClick(View v) {
 
+                if (postThread.equals("Register")) {
+
+                    Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
+                    registerIntent.putExtra("threadPageId", homeFeedId);
+                    context.startActivity(registerIntent);
+
+                } else {
+
                     Intent commentsIntent = new Intent(context, CommentsActivity.class);
                     commentsIntent.putExtra("threadPageId", homeFeedId);
                     context.startActivity(commentsIntent);
 
-
+                }
 
             }
         });
@@ -231,6 +239,11 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             holder.deleteReportPost.setVisibility(View.INVISIBLE);
         }
 
+        //To not show comments on Registration Posts
+        if(postThread.equals("Register")) {
+            holder.postCommentBtn.setVisibility(View.INVISIBLE);
+            holder.postCommentCount.setVisibility(View.INVISIBLE);
+        }
 
     }
 
@@ -249,6 +262,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
         private ImageView postLikeBtn;
         private TextView postLikeCount;
         private TextView postCommentCount;
+        private ImageView postCommentBtn;
         private CardView postCardView;
         private ImageView deleteReportPost;
 
@@ -261,6 +275,7 @@ public class HomeFeedRecyclerAdapter extends RecyclerView.Adapter<HomeFeedRecycl
             postLikeCount = mView.findViewById(R.id.postLikeCount);
 
             postCommentCount = mView.findViewById(R.id.postCommentCount);
+            postCommentBtn = mView.findViewById(R.id.postCommentBtn);
 
             postCardView = mView.findViewById(R.id.postCardView);
 

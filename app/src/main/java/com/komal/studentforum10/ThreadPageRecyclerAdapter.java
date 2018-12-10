@@ -219,7 +219,6 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
                 } else {
 
                     Intent commentsIntent = new Intent(context, CommentsActivity.class);
-                    commentsIntent.putExtra("postThreadId", postThread);
                     commentsIntent.putExtra("threadPageId", threadPageId);
                     context.startActivity(commentsIntent);
 
@@ -232,6 +231,12 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
         if(!currentUserId.equals("M4S0hiNILmTuj1nEKp3NCGvfiiF2"))
         {
             holder.deleteReportPost.setVisibility(View.INVISIBLE);
+        }
+
+        //To not show comments on Registration Posts
+        if(postThread.equals("Register")) {
+            holder.postCommentBtn.setVisibility(View.INVISIBLE);
+            holder.postCommentCount.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -252,6 +257,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
         private ImageButton postDelete;
         private CardView postCardView;
         private TextView postCommentCount;
+        private ImageView postCommentBtn;
         private ImageView deleteReportPost;
 
 
@@ -264,6 +270,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
             postLikeCount = mView.findViewById(R.id.postLikeCount);
 
             postCommentCount = mView.findViewById(R.id.postCommentCount);
+            postCommentBtn = mView.findViewById(R.id.postCommentBtn);
 
             postDelete = mView.findViewById(R.id.delete_post);
 

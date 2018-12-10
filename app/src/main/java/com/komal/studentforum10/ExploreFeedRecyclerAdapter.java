@@ -207,11 +207,20 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             @Override
             public void onClick(View v) {
 
-                Intent commentsIntent = new Intent(context, CommentsActivity.class);
-                commentsIntent.putExtra("threadPageId", exploreFeedId);
-                context.startActivity(commentsIntent);
 
+                if (postThread.equals("Register")) {
 
+                    Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
+                    registerIntent.putExtra("threadPageId", exploreFeedId);
+                    context.startActivity(registerIntent);
+
+                } else {
+
+                    Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                    commentsIntent.putExtra("threadPageId", exploreFeedId);
+                    context.startActivity(commentsIntent);
+
+                }
 
             }
         });
@@ -220,6 +229,12 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
         if(!currentUserId.equals("M4S0hiNILmTuj1nEKp3NCGvfiiF2"))
         {
             holder.deleteReportPost.setVisibility(View.INVISIBLE);
+        }
+
+        //To not show comments on Registration Posts
+        if(postThread.equals("Register")) {
+            holder.postCommentBtn.setVisibility(View.INVISIBLE);
+            holder.postCommentCount.setVisibility(View.INVISIBLE);
         }
 
 
@@ -240,8 +255,9 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
         private ImageView postLikeBtn;
         private TextView postLikeCount;
         private TextView postCommentCount;
+        private ImageView postCommentBtn;
         private CardView postCardView;
-        private TextView deleteReportPost;
+        private ImageView deleteReportPost;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -252,6 +268,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             postLikeCount = mView.findViewById(R.id.postLikeCount);
 
             postCommentCount = mView.findViewById(R.id.postCommentCount);
+            postCommentBtn = mView.findViewById(R.id.postCommentBtn);
 
             postCardView = mView.findViewById(R.id.postCardView);
 
