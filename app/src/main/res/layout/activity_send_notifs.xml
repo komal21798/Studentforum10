@@ -37,5 +37,8 @@
         android:text="Send"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notifsMessage" />
+        app:layout_constraintTop_toBottomOf="@+id/notifsMessage"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorAccent"
+        android:textColor="#ffffff"/>
 </android.support.constraint.ConstraintLayout>
