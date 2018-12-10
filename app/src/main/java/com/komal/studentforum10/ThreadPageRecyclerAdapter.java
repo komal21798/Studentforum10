@@ -246,6 +246,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
         if(postThread.equals("Register")) {
             holder.postCommentBtn.setVisibility(View.INVISIBLE);
             holder.postCommentCount.setVisibility(View.INVISIBLE);
+            holder.postRegistrationView.setVisibility(View.VISIBLE);
         }
 
         //deleting posts
@@ -307,6 +308,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
         private CardView postCardView;
         private TextView postCommentCount;
         private ImageView postCommentBtn;
+        private ImageView postRegistrationView;
         private ImageView deleteReportPost;
 
 
@@ -320,7 +322,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
             postCommentCount = mView.findViewById(R.id.postCommentCount);
             postCommentBtn = mView.findViewById(R.id.postCommentBtn);
-
+            postRegistrationView = mView.findViewById(R.id.postRegistrationView);
             postDelete = mView.findViewById(R.id.delete_post);
 
             postCardView = mView.findViewById(R.id.postCardView);

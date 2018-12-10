@@ -246,6 +246,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
         if(postThread.equals("Register")) {
             holder.postCommentBtn.setVisibility(View.INVISIBLE);
             holder.postCommentCount.setVisibility(View.INVISIBLE);
+            holder.postRegistrationView.setVisibility(View.VISIBLE);
         }
 
         //deleting posts
@@ -307,6 +308,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
         private TextView postLikeCount;
         private TextView postCommentCount;
         private ImageView postCommentBtn;
+        private ImageView postRegistrationView;
         private CardView postCardView;
         private ImageView deleteReportPost;
 
@@ -320,6 +322,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
             postCommentCount = mView.findViewById(R.id.postCommentCount);
             postCommentBtn = mView.findViewById(R.id.postCommentBtn);
+            postRegistrationView = mView.findViewById(R.id.postRegistrationView);
 
             postCardView = mView.findViewById(R.id.postCardView);
 
