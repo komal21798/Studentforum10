@@ -216,6 +216,12 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             }
         });
 
+        //for showing delete/report popup menu
+        if(!currentUserId.equals("M4S0hiNILmTuj1nEKp3NCGvfiiF2"))
+        {
+            holder.deleteReportPost.setVisibility(View.INVISIBLE);
+        }
+
 
     }
 
@@ -235,6 +241,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
         private TextView postLikeCount;
         private TextView postCommentCount;
         private CardView postCardView;
+        private TextView deleteReportPost;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -247,6 +254,8 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             postCommentCount = mView.findViewById(R.id.postCommentCount);
 
             postCardView = mView.findViewById(R.id.postCardView);
+
+            deleteReportPost = mView.findViewById(R.id.deleteReportPost);
         }
 
         public void setPostName(String postText) {
