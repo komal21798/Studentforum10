@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -28,6 +30,8 @@ public class NotifsInboxActivity extends AppCompatActivity {
     private RecyclerView notifsInboxView;
     private List<NotifsInboxPage> notifsInboxPageList;
 
+    private Button clearNotifsBtn;
+
     private NotifsInboxPageRecyclerAdapter notifsInboxPageRecyclerAdapter;
 
     @Override
@@ -43,6 +47,8 @@ public class NotifsInboxActivity extends AppCompatActivity {
 
         notifsInboxView = (RecyclerView) findViewById(R.id.notifsInboxView);
         notifsInboxPageList = new ArrayList<>();
+
+        clearNotifsBtn = findViewById(R.id.clearNotifsBtn);
 
         notifsInboxPageRecyclerAdapter = new NotifsInboxPageRecyclerAdapter(notifsInboxPageList);
         notifsInboxView.setLayoutManager(new LinearLayoutManager(this));
@@ -70,6 +76,15 @@ public class NotifsInboxActivity extends AppCompatActivity {
                         notifsInboxPageRecyclerAdapter.notifyDataSetChanged();
                     }
                 }
+
+            }
+        });
+
+
+
+        clearNotifsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });
