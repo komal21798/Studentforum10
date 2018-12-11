@@ -183,29 +183,37 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
                 @Override
                 public void onClick(View v) {
 
-                    firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes")
-                            .document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (firebaseAuth.getCurrentUser().isAnonymous()) {
 
-                            if (!task.getResult().exists()) {
-                                Map<String, Object> likesMap = new HashMap<>();
-                                likesMap.put("timestamp", FieldValue.serverTimestamp());
+                        Toast.makeText(context, "Please login to access this functionality.", Toast.LENGTH_LONG).show();
+
+                    } else {
+
+                        firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes")
+                                .document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                if (!task.getResult().exists()) {
+                                    Map<String, Object> likesMap = new HashMap<>();
+                                    likesMap.put("timestamp", FieldValue.serverTimestamp());
 
 
-                                firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
-                                firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
+                                    firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
+                                    firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
 
-                            } else {
+                                } else {
 
-                                firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
-                                firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
+                                    firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
+                                    firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
 
+
+                                }
 
                             }
+                        });
 
-                        }
-                    });
+                    }
                 }
             });
 
@@ -218,21 +226,27 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
             @Override
             public void onClick(View v) {
 
-                if (postThread.equals("Register")) {
+                if (firebaseAuth.getCurrentUser().isAnonymous()) {
 
-                    Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
-                    registerIntent.putExtra("threadPageId", threadPageId);
-                    context.startActivity(registerIntent);
+                    Toast.makeText(context, "Please login to access this functionality.", Toast.LENGTH_LONG).show();
 
                 } else {
 
-                    Intent commentsIntent = new Intent(context, CommentsActivity.class);
-                    commentsIntent.putExtra("threadPageId", threadPageId);
-                    commentsIntent.putExtra("postDesc",threadPostDesc);
-                    context.startActivity(commentsIntent);
+                    if (postThread.equals("Register")) {
 
+                        Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
+                        registerIntent.putExtra("threadPageId", threadPageId);
+                        context.startActivity(registerIntent);
+
+                    } else {
+
+                        Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                        commentsIntent.putExtra("threadPageId", threadPageId);
+                        commentsIntent.putExtra("postDesc", threadPostDesc);
+                        context.startActivity(commentsIntent);
+
+                    }
                 }
-
             }
         });
 
