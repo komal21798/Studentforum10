@@ -155,7 +155,15 @@ public class StudentForum extends AppCompatActivity {
 
                     int id = item.getItemId();
 
-                    if (id == R.id.logout) {
+                    if (id == R.id.my_profile) {
+
+                        setupAccount();
+
+                    } else if (id == R.id.settings) {
+
+                        settings();
+
+                    }else if (id == R.id.logout) {
 
                         logout();
 

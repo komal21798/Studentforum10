@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -40,6 +41,7 @@ public class CommentsActivity extends AppCompatActivity {
 
     private ImageView addCommentButton;
     private EditText commentsEditText;
+    private View commentsDivider;
 
     private TextView commentPostName;
     private TextView commentPostDesc;
@@ -79,6 +81,7 @@ public class CommentsActivity extends AppCompatActivity {
 
         addCommentButton = findViewById(R.id.addCommentButton);
         commentsEditText = findViewById(R.id.commentsEditText);
+        commentsDivider = findViewById(R.id.commentsDivider);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -91,6 +94,15 @@ public class CommentsActivity extends AppCompatActivity {
         commentsFeedRecyclerAdapter = new CommentsFeedRecyclerAdapter(commentsPageList);
         commentsPageView.setLayoutManager(new LinearLayoutManager(this));
         commentsPageView.setAdapter(commentsFeedRecyclerAdapter);
+
+        //guest cant comment
+        if (firebaseAuth.getCurrentUser().isAnonymous()) {
+
+            addCommentButton.setVisibility(View.INVISIBLE);
+            commentsEditText.setVisibility(View.INVISIBLE);
+            commentsDivider.setVisibility(View.INVISIBLE);
+
+        }
 
         //for adding new comment
         addCommentButton.setOnClickListener(new View.OnClickListener() {

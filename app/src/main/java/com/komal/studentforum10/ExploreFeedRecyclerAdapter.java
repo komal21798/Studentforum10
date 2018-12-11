@@ -125,7 +125,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
         //Get Comments Count
         firebaseFirestore.collection("/Posts/" + exploreFeedId + "/Comments")
-                .addSnapshotListener((Activity) context,new EventListener<QuerySnapshot>() {
+                .addSnapshotListener((Activity) context, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         if (!queryDocumentSnapshots.isEmpty()) {
@@ -143,7 +143,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
 
         //Get Likes Counts
         firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes")
-                .addSnapshotListener((Activity) context,new EventListener<QuerySnapshot>() {
+                .addSnapshotListener((Activity) context, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         if (!queryDocumentSnapshots.isEmpty()) {
@@ -163,7 +163,7 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
         //Get Likes
 
         firebaseFirestore.collection("Posts/" + exploreFeedId + "/Likes")
-                .document(currentUserId).addSnapshotListener((Activity) context,new EventListener<DocumentSnapshot>() {
+                .document(currentUserId).addSnapshotListener((Activity) context, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
@@ -221,40 +221,33 @@ public class ExploreFeedRecyclerAdapter extends RecyclerView.Adapter<ExploreFeed
             @Override
             public void onClick(View v) {
 
-                if (firebaseAuth.getCurrentUser().isAnonymous()) {
 
-                    Toast.makeText(context, "Please login to access this functionality.", Toast.LENGTH_LONG).show();
+                if (postThread.equals("Register")) {
+
+                    Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
+                    registerIntent.putExtra("threadPageId", exploreFeedId);
+                    context.startActivity(registerIntent);
 
                 } else {
 
-                    if (postThread.equals("Register")) {
+                    Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                    commentsIntent.putExtra("threadPageId", exploreFeedId);
+                    commentsIntent.putExtra("postDesc", explorePostDesc);
+                    context.startActivity(commentsIntent);
 
-                        Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
-                        registerIntent.putExtra("threadPageId", exploreFeedId);
-                        context.startActivity(registerIntent);
-
-                    } else {
-
-                        Intent commentsIntent = new Intent(context, CommentsActivity.class);
-                        commentsIntent.putExtra("threadPageId", exploreFeedId);
-                        commentsIntent.putExtra("postDesc", explorePostDesc);
-                        context.startActivity(commentsIntent);
-
-                    }
                 }
+
             }
         });
 
         //for showing delete/report popup menu
-        if(!currentUserId.equals("M4S0hiNILmTuj1nEKp3NCGvfiiF2"))
-        {
+        if (!currentUserId.equals("M4S0hiNILmTuj1nEKp3NCGvfiiF2")) {
             holder.deleteReportPost.setVisibility(View.INVISIBLE);
         }
 
 
-
         //To not show comments on Registration Posts
-        if(postThread.equals("Register")) {
+        if (postThread.equals("Register")) {
             holder.postCommentBtn.setVisibility(View.INVISIBLE);
             holder.postCommentCount.setVisibility(View.INVISIBLE);
             holder.postRegistrationView.setVisibility(View.VISIBLE);

@@ -157,7 +157,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
         //Get Likes
         firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes")
-                .document(currentUserId).addSnapshotListener((Activity) context,new EventListener<DocumentSnapshot>() {
+                .document(currentUserId).addSnapshotListener((Activity) context, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
@@ -172,57 +172,9 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
             }
         });
 
-        if (firebaseAuth.getCurrentUser().isAnonymous()) {
 
-            Toast.makeText(context, "not allowed to like", Toast.LENGTH_SHORT).show();
-
-        } else {
-
-            //Likes Feature
-            holder.postLikeBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (firebaseAuth.getCurrentUser().isAnonymous()) {
-
-                        Toast.makeText(context, "Please login to access this functionality.", Toast.LENGTH_LONG).show();
-
-                    } else {
-
-                        firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes")
-                                .document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                                if (!task.getResult().exists()) {
-                                    Map<String, Object> likesMap = new HashMap<>();
-                                    likesMap.put("timestamp", FieldValue.serverTimestamp());
-
-
-                                    firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
-                                    firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
-
-                                } else {
-
-                                    firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
-                                    firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
-
-
-                                }
-
-                            }
-                        });
-
-                    }
-                }
-            });
-
-        }
-
-
-
-        //going to comments activity
-        holder.postCardView.setOnClickListener(new View.OnClickListener() {
+        //Likes Feature
+        holder.postLikeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -232,32 +184,66 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
                 } else {
 
-                    if (postThread.equals("Register")) {
+                    firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes")
+                            .document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                        Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
-                        registerIntent.putExtra("threadPageId", threadPageId);
-                        context.startActivity(registerIntent);
+                            if (!task.getResult().exists()) {
+                                Map<String, Object> likesMap = new HashMap<>();
+                                likesMap.put("timestamp", FieldValue.serverTimestamp());
 
-                    } else {
 
-                        Intent commentsIntent = new Intent(context, CommentsActivity.class);
-                        commentsIntent.putExtra("threadPageId", threadPageId);
-                        commentsIntent.putExtra("postDesc", threadPostDesc);
-                        context.startActivity(commentsIntent);
+                                firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
+                                firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).set(likesMap);
 
-                    }
+                            } else {
+
+                                firebaseFirestore.collection("Threads/" + postThread + "/Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
+                                firebaseFirestore.collection("Posts/" + threadPageId + "/Likes").document(currentUserId).delete();
+
+
+                            }
+
+                        }
+                    });
+
                 }
             }
         });
 
+
+        //going to comments activity
+        holder.postCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if (postThread.equals("Register")) {
+
+                    Intent registerIntent = new Intent(context, EventsRegistrationActivity.class);
+                    registerIntent.putExtra("threadPageId", threadPageId);
+                    context.startActivity(registerIntent);
+
+                } else {
+
+                    Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                    commentsIntent.putExtra("threadPageId", threadPageId);
+                    commentsIntent.putExtra("postDesc", threadPostDesc);
+                    context.startActivity(commentsIntent);
+
+                }
+
+            }
+        });
+
         //for showing delete/report popup menu
-        if(!currentUserId.equals("M4S0hiNILmTuj1nEKp3NCGvfiiF2"))
-        {
+        if (!currentUserId.equals("M4S0hiNILmTuj1nEKp3NCGvfiiF2")) {
             holder.deleteReportPost.setVisibility(View.INVISIBLE);
         }
 
         //To not show comments on Registration Posts
-        if(postThread.equals("Register")) {
+        if (postThread.equals("Register")) {
             holder.postCommentBtn.setVisibility(View.INVISIBLE);
             holder.postCommentCount.setVisibility(View.INVISIBLE);
             holder.postRegistrationView.setVisibility(View.VISIBLE);
@@ -351,7 +337,7 @@ public class ThreadPageRecyclerAdapter extends RecyclerView.Adapter<ThreadPageRe
 
         }
 
-        public void setUserData(String name, String image){
+        public void setUserData(String name, String image) {
 
             postUsername = mView.findViewById(R.id.postUsername);
             postUserimage = mView.findViewById(R.id.postUserImage);

@@ -43,7 +43,7 @@
         android:id="@+id/commentsPageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/divider2"
+        app:layout_constraintBottom_toTopOf="@+id/commentsDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider4" />
@@ -72,7 +72,7 @@
         app:srcCompat="@drawable/ic_send_black_24dp" />
 
     <View
-        android:id="@+id/divider2"
+        android:id="@+id/commentsDivider"
         android:layout_width="368dp"
         android:layout_height="1dp"
         android:layout_marginBottom="8dp"
